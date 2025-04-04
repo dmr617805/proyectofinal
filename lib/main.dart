@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:proyectofinal/models/cliente.dart';
+import 'package:proyectofinal/screens/cliente/cliente_form_screen.dart';
+import 'package:proyectofinal/screens/cliente/cliente_screen.dart';
 import 'package:proyectofinal/screens/login_screen.dart';
+import 'package:proyectofinal/viewmodels/cliente_viewmodel.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,15 +16,36 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ClienteViewModel()),
+        // ChangeNotifierProvider(create: (_) => UsuarioViewModel()),
+      ],
+      child: MaterialApp(
+        title: 'Proyecto Final',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        ),
+        initialRoute: LoginScreen.routeName,
+        onGenerateRoute: (settings) {
+          switch (settings.name) {
+            case LoginScreen.routeName:
+              return MaterialPageRoute(builder: (_) => const LoginScreen());
 
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            case ClienteScreen.routeName:
+              return MaterialPageRoute(builder: (_) => const ClienteScreen());
+
+            case ClienteFormScreen.routeName:
+              final cliente = settings.arguments as Cliente?;
+              return MaterialPageRoute(
+                builder: (_) => ClienteFormScreen(cliente: cliente),
+              );
+
+            default:
+              return null;
+          }
+        },
       ),
-      home: const LoginScreen(),
     );
   }
 }
-
