@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyectofinal/models/cliente.dart';
+import 'package:proyectofinal/models/sucursal.dart';
 import 'package:proyectofinal/screens/cliente/cliente_form_screen.dart';
 import 'package:proyectofinal/screens/cliente/cliente_screen.dart';
 import 'package:proyectofinal/screens/login_screen.dart';
+import 'package:proyectofinal/screens/sucursal/sucursal_form_screen.dart';
+import 'package:proyectofinal/screens/sucursal/sucursal_screen.dart';
 import 'package:proyectofinal/viewmodels/cliente_viewmodel.dart';
+import 'package:proyectofinal/viewmodels/sucursal_viewmodel.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,6 +23,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ClienteViewModel()),
+        ChangeNotifierProvider(create: (_) => SucursalViewModel()),
         // ChangeNotifierProvider(create: (_) => UsuarioViewModel()),
       ],
       child: MaterialApp(
@@ -39,6 +44,15 @@ class MyApp extends StatelessWidget {
               final cliente = settings.arguments as Cliente?;
               return MaterialPageRoute(
                 builder: (_) => ClienteFormScreen(cliente: cliente),
+              );
+
+            case SucursalScreen.routeName:
+              return MaterialPageRoute(builder: (_) => const SucursalScreen());
+
+            case SucursalFormScreen.routeName:
+              final sucursal = settings.arguments as Sucursal?;
+              return MaterialPageRoute(
+                builder: (_) => SucursalFormScreen(sucursal: sucursal),
               );
 
             default:

@@ -42,7 +42,14 @@ class DatabaseHelper {
       )
     ''');
 
-
+    await db.execute('''
+      CREATE TABLE sucursal (
+        id_sucursal INTEGER PRIMARY KEY AUTOINCREMENT,
+        nombre TEXT NOT NULL,
+        ubicacion TEXT NOT NULL,
+        is_active BOOLEAN NOT NULL DEFAULT 1   
+      )
+    ''');
 
     final batch = db.batch();
 

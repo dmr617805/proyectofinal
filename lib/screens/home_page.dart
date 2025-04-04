@@ -6,7 +6,7 @@ import 'login_screen.dart';
 class HomePage extends StatelessWidget {
   static const routeName = '/';
   final String username;
-  const HomePage({required this.username});
+  const HomePage({super.key, required this.username});
 
   Future<void> _logout(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
