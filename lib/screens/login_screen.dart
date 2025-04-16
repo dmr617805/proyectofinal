@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:proyectofinal/models/usuario.dart';
-import 'package:proyectofinal/screens/producto/producto_screen.dart';
-import 'package:proyectofinal/screens/sucursal/sucursal_screen.dart';
+import 'package:proyectofinal/screens/home_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -34,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       // Navegar a la pantalla de inicio
 
-      Navigator.pushReplacementNamed(context, ProductoScreen.routeName);
+      Navigator.pushReplacementNamed(context, HomePage.routeName, arguments: validUser.username);
 
       // Navigator.pushReplacement(
       //   context,

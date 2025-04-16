@@ -5,6 +5,7 @@ import 'package:proyectofinal/models/producto.dart';
 import 'package:proyectofinal/models/sucursal.dart';
 import 'package:proyectofinal/screens/cliente/cliente_form_screen.dart';
 import 'package:proyectofinal/screens/cliente/cliente_screen.dart';
+import 'package:proyectofinal/screens/home_page.dart';
 import 'package:proyectofinal/screens/login_screen.dart';
 import 'package:proyectofinal/screens/producto/producto_form_screen.dart';
 import 'package:proyectofinal/screens/producto/producto_screen.dart';
@@ -41,6 +42,10 @@ class MyApp extends StatelessWidget {
           switch (settings.name) {
             case LoginScreen.routeName:
               return MaterialPageRoute(builder: (_) => const LoginScreen());
+
+            case HomePage.routeName:
+              final username = settings.arguments as String;
+              return MaterialPageRoute(builder: (_) => HomePage(username: username));
 
             case ClienteScreen.routeName:
               return MaterialPageRoute(builder: (_) => const ClienteScreen());

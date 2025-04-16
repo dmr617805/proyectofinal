@@ -1,10 +1,13 @@
 // pages/home_page.dart
 import 'package:flutter/material.dart';
+import 'package:proyectofinal/screens/cliente/cliente_screen.dart';
+import 'package:proyectofinal/screens/producto/producto_screen.dart';
+import 'package:proyectofinal/screens/sucursal/sucursal_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'login_screen.dart';
 
 class HomePage extends StatelessWidget {
-  static const routeName = '/';
+  static const routeName = '/home';
   final String username;
   const HomePage({super.key, required this.username});
 
@@ -29,6 +32,45 @@ class HomePage extends StatelessWidget {
             onPressed: () => _logout(context),
           ),
         ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.all(0),
+          children: [
+            UserAccountsDrawerHeader(
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+              ),
+              accountName: Text('John Doe'),
+              accountEmail: Text('john.doe@mail.com'),
+            ),
+
+            ListTile(
+              title: Text('Productos'),
+              leading: Icon(Icons.shopping_cart),
+              onTap: () {
+                Navigator.pop(context); 
+                Navigator.pushNamed(context, ProductoScreen.routeName);
+              },
+            ),
+            ListTile(
+              title: Text('Sucursales'),
+              leading: Icon(Icons.store),
+              onTap: () {
+                Navigator.pop(context); 
+                Navigator.pushNamed(context, SucursalScreen.routeName);
+              },
+            ),
+            ListTile(
+              title: Text('Clientes'),
+              leading: Icon(Icons.person),
+              onTap: () {
+                Navigator.pop(context); 
+                Navigator.pushNamed(context, ClienteScreen.routeName);
+              },
+            ),
+          ],
+        ),
       ),
       body: Center(
         child: Text('¡Hola, $username!', style: TextStyle(fontSize: 24)),
