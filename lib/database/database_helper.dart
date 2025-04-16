@@ -51,6 +51,30 @@ class DatabaseHelper {
       )
     ''');
 
+
+    await db.execute('''
+      CREATE TABLE producto (
+        id_producto INTEGER PRIMARY KEY AUTOINCREMENT,
+        nombre TEXT NOT NULL,
+        descripcion TEXT,
+        precio REAL NOT NULL,
+        is_active INTEGER NOT NULL DEFAULT 1
+      )
+    ''');
+
+
+    await db.execute('''
+      CREATE TABLE inventario (
+        id_sucursal INTEGER NOT NULL,
+        id_producto INTEGER NOT NULL,
+        cantidad_disponible INTEGER NOT NULL,
+        PRIMARY KEY (id_sucursal, id_producto),
+        FOREIGN KEY (id_sucursal) REFERENCES sucursal(id_sucursal),
+        FOREIGN KEY (id_producto) REFERENCES producto(id_producto)
+      )
+    ''');
+
+
     final batch = db.batch();
 
     await batch.commit();
