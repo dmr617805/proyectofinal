@@ -13,13 +13,12 @@ class SucursalViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> crear(Sucursal sucursal) async {
-    await _repo.crear(sucursal);
-    await cargarSucursales();
-  }
-
-  Future<void> actualizar(Sucursal sucursal) async {
-    await _repo.actualizar(sucursal);
+  Future<void> guardar(Sucursal sucursal) async {
+    if (sucursal.idSucursal == null) {
+      await _repo.crear(sucursal);
+    } else {
+      await _repo.actualizar(sucursal);
+    }
     await cargarSucursales();
   }
 

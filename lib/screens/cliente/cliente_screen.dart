@@ -13,18 +13,21 @@ class ClienteScreen extends StatefulWidget {
 }
 
 class _ClienteScreenState extends State<ClienteScreen> {
-
-   late ClienteViewModel viewModel;
+  late ClienteViewModel viewModel;
 
   @override
   void initState() {
     super.initState();
-    // Inicializamos el viewModel y cargamos los clientes cuando el widget se cree.
-    viewModel = Provider.of<ClienteViewModel>(context, listen: false);
-    viewModel.cargarClientes();
+    _loadData();
   }
 
-@override
+  Future<void> _loadData() async {
+    // Inicializamos el viewModel y cargamos los clientes cuando el widget se cree.
+    viewModel = Provider.of<ClienteViewModel>(context, listen: false);
+    await viewModel.cargarClientes();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Clientes')),
@@ -34,7 +37,7 @@ class _ClienteScreenState extends State<ClienteScreen> {
           if (viewModel.clientes.isEmpty) {
             return Center(child: Text('No hay clientes'));
           }
-          
+
           return ListView.builder(
             itemCount: viewModel.clientes.length,
             itemBuilder: (context, index) {
@@ -42,10 +45,9 @@ class _ClienteScreenState extends State<ClienteScreen> {
               return ClienteCard(
                 cliente: cliente,
                 onEdit: () {
-                  Navigator.of(context).pushNamed(
-                    ClienteFormScreen.routeName,
-                    arguments: cliente,
-                  );
+                  Navigator.of(
+                    context,
+                  ).pushNamed(ClienteFormScreen.routeName, arguments: cliente);
                 },
                 onDelete: () {
                   viewModel.eliminar(cliente.idCliente!);

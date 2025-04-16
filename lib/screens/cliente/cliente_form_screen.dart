@@ -24,18 +24,10 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
   @override
   void initState() {
     super.initState();
-    _nombreController = TextEditingController(
-      text: widget.cliente?.nombre ?? '',
-    );
-    _correoController = TextEditingController(
-      text: widget.cliente?.correo ?? '',
-    );
-    _telefonoController = TextEditingController(
-      text: widget.cliente?.telefono ?? '',
-    );
-    _direccionController = TextEditingController(
-      text: widget.cliente?.direccion ?? '',
-    );
+    _nombreController = TextEditingController(text: widget.cliente?.nombre ?? '');
+    _correoController = TextEditingController(text: widget.cliente?.correo ?? '');
+    _telefonoController = TextEditingController(text: widget.cliente?.telefono ?? '');
+    _direccionController = TextEditingController(text: widget.cliente?.direccion ?? '');
   }
 
   @override
@@ -49,7 +41,7 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
 
   void _guardarCliente() async {
     if (_formKey.currentState!.validate()) {
-      final nuevoCliente = Cliente(
+      final cliente = Cliente(
         idCliente: widget.cliente?.idCliente,
         nombre: _nombreController.text.trim(),
         correo: _correoController.text.trim(),
@@ -58,13 +50,8 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
       );
 
       final clienteVM = Provider.of<ClienteViewModel>(context, listen: false);
-
-      if (widget.cliente == null) {
-        await clienteVM.crear(nuevoCliente);
-      } else {
-        await clienteVM.actualizar(nuevoCliente);
-      }
-
+      await clienteVM.guardar(cliente);
+      
       Navigator.pop(context); // Volver a la pantalla anterior
     }
   }

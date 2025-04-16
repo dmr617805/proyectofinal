@@ -79,13 +79,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
       );
 
       final productoVM = Provider.of<ProductoViewModel>(context, listen: false);
-
       await productoVM.guardar(producto);
-      // if (producto.idProducto == null) {
-      //   await productoVM.crear(producto);
-      // } else {
-      //   await productoVM.actualizar(producto);
-      // }
 
       Navigator.pop(context);
     }

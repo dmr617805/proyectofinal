@@ -14,15 +14,15 @@ class ClienteViewModel with ChangeNotifier  {
     notifyListeners();
   }
 
-  Future<void> crear(Cliente cliente) async {
-    await _repo.crear(cliente);
+  Future<void> guardar(Cliente cliente) async {
+    if (cliente.idCliente == null) {
+      await _repo.crear(cliente);
+    } else {
+      await _repo.actualizar(cliente);
+    }    
     await cargarClientes();
   }
 
-  Future<void> actualizar(Cliente cliente) async {
-    await _repo.actualizar(cliente);
-    await cargarClientes();
-  }
 
   Future<void> eliminar(int id) async {
     await _repo.eliminar(id);

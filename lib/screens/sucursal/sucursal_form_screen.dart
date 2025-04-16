@@ -20,12 +20,8 @@ class _SucursalFormScreenState extends State<SucursalFormScreen> {
   @override
   void initState() {
     super.initState();
-    _nombreController = TextEditingController(
-      text: widget.sucursal != null ? widget.sucursal!.nombre : '',
-    );
-    _ubicacionController = TextEditingController(
-      text: widget.sucursal != null ? widget.sucursal!.ubicacion : '',
-    );
+    _nombreController = TextEditingController(text: widget.sucursal != null ? widget.sucursal!.nombre : '');
+    _ubicacionController = TextEditingController(text: widget.sucursal != null ? widget.sucursal!.ubicacion : '');
   }
 
   @override
@@ -37,7 +33,7 @@ class _SucursalFormScreenState extends State<SucursalFormScreen> {
 
   void _guardarSucursal() async {
     if (_formKey.currentState!.validate()) {
-      final nuevaSucursal = Sucursal(
+      final sucursal = Sucursal(
         idSucursal: widget.sucursal?.idSucursal,
         nombre: _nombreController.text,
         ubicacion: _ubicacionController.text,
@@ -45,13 +41,8 @@ class _SucursalFormScreenState extends State<SucursalFormScreen> {
       );
 
       final sucursalVM = Provider.of<SucursalViewModel>(context, listen: false);
-
-      if (widget.sucursal == null) {
-        await sucursalVM.crear(nuevaSucursal);
-      } else {
-        await sucursalVM.actualizar(nuevaSucursal);
-      }
-
+      await sucursalVM.guardar(sucursal);
+      
       Navigator.pop(context); // Volver a la pantalla anterior
     }
   }
