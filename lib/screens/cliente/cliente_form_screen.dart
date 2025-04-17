@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyectofinal/models/cliente.dart';
 import 'package:proyectofinal/viewmodels/cliente_viewmodel.dart';
+import 'package:proyectofinal/widgets/comun/boton_guardar.dart';
 
 class ClienteFormScreen extends StatefulWidget {
   static const String routeName = '/cliente_form';
@@ -15,6 +16,7 @@ class ClienteFormScreen extends StatefulWidget {
 
 class _ClienteFormScreenState extends State<ClienteFormScreen> {
   final _formKey = GlobalKey<FormState>();
+  bool _guardandoCliente = false;
 
   late TextEditingController _nombreController;
   late TextEditingController _correoController;
@@ -24,10 +26,18 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
   @override
   void initState() {
     super.initState();
-    _nombreController = TextEditingController(text: widget.cliente?.nombre ?? '');
-    _correoController = TextEditingController(text: widget.cliente?.correo ?? '');
-    _telefonoController = TextEditingController(text: widget.cliente?.telefono ?? '');
-    _direccionController = TextEditingController(text: widget.cliente?.direccion ?? '');
+    _nombreController = TextEditingController(
+      text: widget.cliente?.nombre ?? '',
+    );
+    _correoController = TextEditingController(
+      text: widget.cliente?.correo ?? '',
+    );
+    _telefonoController = TextEditingController(
+      text: widget.cliente?.telefono ?? '',
+    );
+    _direccionController = TextEditingController(
+      text: widget.cliente?.direccion ?? '',
+    );
   }
 
   @override
@@ -49,9 +59,18 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
         direccion: _direccionController.text.trim(),
       );
 
-      final clienteVM = Provider.of<ClienteViewModel>(context, listen: false);
-      await clienteVM.guardar(cliente);
+      setState(() {
+        _guardandoCliente = true;
+      });
+
+      await Provider.of<ClienteViewModel>(context, listen: false).guardar(cliente);
       
+      if (mounted) {
+        setState(() {
+          _guardandoCliente = false;
+        });        
+      }
+
       Navigator.pop(context); // Volver a la pantalla anterior
     }
   }
@@ -95,9 +114,10 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
                     (value) => value!.isEmpty ? 'Ingrese una dirección' : null,
               ),
               const SizedBox(height: 24),
-              ElevatedButton(
+              BotonGuardar(
+                isLoading: _guardandoCliente,
+                texto: esEdicion ? 'Actualizar' : 'Guardar',
                 onPressed: _guardarCliente,
-                child: Text(esEdicion ? 'Actualizar' : 'Guardar'),
               ),
             ],
           ),

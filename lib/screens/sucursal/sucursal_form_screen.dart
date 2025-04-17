@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyectofinal/models/sucursal.dart';
 import 'package:proyectofinal/viewmodels/sucursal_viewmodel.dart';
+import 'package:proyectofinal/widgets/comun/boton_guardar.dart';
 
 class SucursalFormScreen extends StatefulWidget {
   static const String routeName = '/sucursal_form';
@@ -16,6 +17,7 @@ class _SucursalFormScreenState extends State<SucursalFormScreen> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _nombreController;
   late TextEditingController _ubicacionController;
+  bool _guardandoSucursal = false;
 
   @override
   void initState() {
@@ -33,6 +35,11 @@ class _SucursalFormScreenState extends State<SucursalFormScreen> {
 
   void _guardarSucursal() async {
     if (_formKey.currentState!.validate()) {
+
+      setState(() {
+        _guardandoSucursal = true;
+      });
+
       final sucursal = Sucursal(
         idSucursal: widget.sucursal?.idSucursal,
         nombre: _nombreController.text,
@@ -40,8 +47,13 @@ class _SucursalFormScreenState extends State<SucursalFormScreen> {
         isActive: widget.sucursal?.isActive ?? true,
       );
 
-      final sucursalVM = Provider.of<SucursalViewModel>(context, listen: false);
-      await sucursalVM.guardar(sucursal);
+      await Provider.of<SucursalViewModel>(context, listen: false).guardar(sucursal);;
+      
+      if (mounted) {
+        setState(() {
+          _guardandoSucursal = false;
+        });
+      }
       
       Navigator.pop(context); // Volver a la pantalla anterior
     }
@@ -49,11 +61,11 @@ class _SucursalFormScreenState extends State<SucursalFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isEditing = widget.sucursal != null;
+    final esEdicion = widget.sucursal != null;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(isEditing ? 'Editar Sucursal' : 'Nueva Sucursal'),
+        title: Text(esEdicion ? 'Editar Sucursal' : 'Nueva Sucursal'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -80,9 +92,10 @@ class _SucursalFormScreenState extends State<SucursalFormScreen> {
                             : null,
               ),
               SizedBox(height: 20),
-              ElevatedButton(                
+              BotonGuardar(
+                isLoading: _guardandoSucursal,
+                texto: esEdicion ? 'Actualizar' : 'Guardar',
                 onPressed: _guardarSucursal,
-                child: Text(isEditing ? 'Actualizar' : 'Guardar'),
               ),
             ],
           ),

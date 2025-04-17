@@ -75,7 +75,8 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE metodo_pago(
         id_metodo_pago INTEGER PRIMARY KEY AUTOINCREMENT,
-        nombre TEXT NOT NULL,
+        codigo TEXT NOT NULL,
+        descripcion TEXT NOT NULL,
         is_active BOOLEAN NOT NULL DEFAULT 1        
       )
     ''');
@@ -109,17 +110,14 @@ class DatabaseHelper {
     final batch = db.batch();
 
     // Insertar metodos de pago predeterminados
-    batch.insert('metodo_pago', {'nombre': 'efectivo', 'is_active': 1});
-    batch.insert('metodo_pago', {'nombre': 'tarjeta_credito', 'is_active': 1});
-    batch.insert('metodo_pago', {'nombre': 'tarjeta_debito', 'is_active': 1});
-    batch.insert('metodo_pago', {'nombre': 'paypal', 'is_active': 1});
-    batch.insert('metodo_pago', {
-      'nombre': 'transferencia_bancaria',
-      'is_active': 1,
-    });
+    batch.insert('metodo_pago', {'codigo': 'efectivo', 'descripcion':'Efectivo' , 'is_active': 1});
+    batch.insert('metodo_pago', {'codigo': 'tarjeta_credito', 'descripcion':'Tarjeta de credito' ,'is_active': 1});
+    batch.insert('metodo_pago', {'codigo': 'tarjeta_debito', 'descripcion':'Tarjeta de debito' ,'is_active': 1});
+    batch.insert('metodo_pago', {'codigo': 'paypal', 'descripcion':'Paypal' ,'is_active': 1});
+    batch.insert('metodo_pago', {'codigo': 'transferencia_bancaria','descripcion':'Transferencia Bancaria', 'is_active': 1,});
 
     await batch.commit();
-    
+
   }
 
   Future<int> insert(String table, Map<String, dynamic> row) async {

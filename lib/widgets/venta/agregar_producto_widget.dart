@@ -45,7 +45,7 @@ class _AgregarProductoWidgetState extends State<AgregarProductoWidget> {
       children: [
         const Text(
           'Agregar producto',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
         ),
         const SizedBox(height: 8),
         Row(

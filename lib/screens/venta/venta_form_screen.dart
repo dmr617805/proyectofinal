@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyectofinal/models/cliente.dart';
 import 'package:proyectofinal/models/detalle_venta.dart';
+import 'package:proyectofinal/models/metodo_pago.dart';
 import 'package:proyectofinal/models/producto.dart';
 import 'package:proyectofinal/models/sucursal.dart';
 import 'package:proyectofinal/models/venta.dart';
@@ -9,6 +10,8 @@ import 'package:proyectofinal/viewmodels/cliente_viewmodel.dart';
 import 'package:proyectofinal/viewmodels/producto_viewmodel.dart';
 import 'package:proyectofinal/viewmodels/sucursal_viewmodel.dart';
 import 'package:proyectofinal/viewmodels/venta_viewmodel.dart';
+import 'package:proyectofinal/widgets/comun/boton_guardar.dart';
+import 'package:proyectofinal/widgets/metodo_pago/metodo_pago_selector.dart';
 import 'package:proyectofinal/widgets/venta/agregar_producto_widget.dart';
 import 'package:proyectofinal/widgets/venta/lista_detalle_productos_widget.dart';
 import 'package:proyectofinal/widgets/venta/totales_widget.dart';
@@ -24,13 +27,11 @@ class VentaFormScreen extends StatefulWidget {
 class _VentaFormScreenState extends State<VentaFormScreen> {
   Cliente? clienteSeleccionado;
   Sucursal? sucursalSeleccionada;
-  String? formaPagoSeleccionada;
   Producto? productoSeleccionado;
+  MetodoPago? metodoPagoSeleccionado;
   final TextEditingController cantidadController = TextEditingController();
   final List<DetalleVenta> detalles = [];
-
-
-  final formasDePago = ['Efectivo', 'Tarjeta', 'Transferencia'];
+  bool _guardandoVenta = false;
 
   @override
   void initState() {
@@ -53,7 +54,7 @@ class _VentaFormScreenState extends State<VentaFormScreen> {
     await Provider.of<ProductoViewModel>(context, listen: false).cargarProductosConInventario();
   }
 
-  void agregarProducto(Producto producto, int cantidad) {
+  void _agregarProducto(Producto producto, int cantidad) {
     final index = detalles.indexWhere(
       (d) => d.idProducto == producto.idProducto,
     );
@@ -74,24 +75,24 @@ class _VentaFormScreenState extends State<VentaFormScreen> {
     setState(() {});
   }
 
-  void eliminarProducto(int index) {
-  setState(() {
-    detalles.removeAt(index);
-  });
-}
+  void _eliminarProducto(int index) {
+    setState(() {
+      detalles.removeAt(index);
+    });
+  }
 
-  double calcularTotal() {
+  double _calcularTotal() {
     return detalles.fold(0.0, (total, d) => total + d.precioUnitario * d.cantidad);
   }
 
-  int calcularCantidadTotal() {
+  int _calcularCantidadTotal() {
     return detalles.fold(0, (sum, d) => sum + d.cantidad);
   }
 
-  void guardarVenta() async {
+  void _guardarVenta() async {
     if (clienteSeleccionado == null ||
         sucursalSeleccionada == null ||
-        formaPagoSeleccionada == null ||
+        metodoPagoSeleccionado == null ||
         detalles.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Por favor completa todos los campos.')),
@@ -99,11 +100,15 @@ class _VentaFormScreenState extends State<VentaFormScreen> {
       return;
     }
 
+    setState(() {
+      _guardandoVenta = true;
+    });
+
     final venta = Venta(
       idCliente: clienteSeleccionado!.idCliente!,
       idSucursal: sucursalSeleccionada!.idSucursal!,
-      idMetodoPago: 1,
-      total: calcularTotal(),
+      idMetodoPago: metodoPagoSeleccionado!.idMetodoPago!,
+      total: _calcularTotal(),
       fecha: DateTime.now(),
     );
 
@@ -111,6 +116,12 @@ class _VentaFormScreenState extends State<VentaFormScreen> {
       context,
       listen: false,
     ).registrarVenta(venta, detalles);
+
+    if (mounted) {
+      setState(() {
+        _guardandoVenta = false;
+      });
+    }
 
     Navigator.pop(context);
   }
@@ -157,41 +168,39 @@ class _VentaFormScreenState extends State<VentaFormScreen> {
             /// Agregar producto
             AgregarProductoWidget(
               productos: productoVM.productos,
-              onAgregar: agregarProducto,
+              onAgregar: _agregarProducto,
             ),
 
             const Divider(),
 
             ListaDetalleProductosWidget(
               detalles: detalles,
-              onEliminar: eliminarProducto,
+              onEliminar: _eliminarProducto,
             ),
 
             const SizedBox(height: 16),
 
-            /// Forma de pago y resumen
-            DropdownButtonFormField<String>(
-              decoration: const InputDecoration(labelText: 'Forma de pago'),
-              value: formaPagoSeleccionada,
-              items: formasDePago
-                  .map((fp) => DropdownMenuItem(value: fp, child: Text(fp)))
-                  .toList(),
-              onChanged: (fp) => setState(() => formaPagoSeleccionada = fp),
+            /// Metodo de pago
+            MetodoPagoSelector(
+              metodoPagoSeleccionado: metodoPagoSeleccionado,
+              onMetodoSeleccionado: (metodo) {
+                setState(() {
+                  metodoPagoSeleccionado = metodo;
+                });
+              },
             ),
             const SizedBox(height: 16),
             TotalesWidget(
-              totalProductos: calcularCantidadTotal(),
-              totalPagar: calcularTotal(),
+              totalProductos: _calcularCantidadTotal(),
+              totalPagar: _calcularTotal(),
             ),            
             const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                icon: const Icon(Icons.save),
-                label: const Text('Guardar Venta'),
-                onPressed: guardarVenta,
-              ),
+            BotonGuardar(
+              isLoading: _guardandoVenta,
+              texto: 'Crear Venta',
+              onPressed: _guardarVenta
             ),
+             const SizedBox(height: 16),
           ],
         ),
       ),

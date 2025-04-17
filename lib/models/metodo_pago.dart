@@ -1,14 +1,16 @@
 class MetodoPago {
   final int? idMetodoPago;
-  final String nombre;
+  final String codigo;
+  final String descripcion;
   final bool isActive;
 
-  MetodoPago({this.idMetodoPago, required this.nombre, this.isActive = true});
+  MetodoPago({this.idMetodoPago, required this.codigo, required this.descripcion, this.isActive = true});
 
   factory MetodoPago.fromMap(Map<String, dynamic> map) {
     return MetodoPago(
       idMetodoPago: map['id_metodo_pago'],
-      nombre: map['nombre'],
+      codigo: map['codigo'],
+      descripcion: map['descripcion'],
       isActive: map['is_active'] == 1,
     );
   }
@@ -16,21 +18,23 @@ class MetodoPago {
   Map<String, dynamic> toMap() {
     return {
       'id_metodo_pago': idMetodoPago,
-      'nombre': nombre,
+      'codigo': codigo,
+      'descripcion': descripcion,
       'is_active': isActive ? 1 : 0,
     };
   }
 
-  MetodoPago copyWith({int? idMetodoPago, String? nombre, bool? isActive}) {
+  MetodoPago copyWith({int? idMetodoPago, String? codigo, String? descripcion, bool? isActive}) {
     return MetodoPago(
       idMetodoPago: idMetodoPago ?? this.idMetodoPago,
-      nombre: nombre ?? this.nombre,
+      codigo: codigo ?? this.codigo,
+      descripcion: descripcion ?? this.descripcion,
       isActive: isActive ?? this.isActive,
     );
   }
 
   @override
   String toString() {
-    return 'MetodoPago(idMetodoPago: $idMetodoPago, nombre: $nombre, isActive: $isActive)';
+    return 'MetodoPago(idMetodoPago: $idMetodoPago, codigo: $codigo, descripcion: $descripcion, isActive: $isActive)';
   }
 }
