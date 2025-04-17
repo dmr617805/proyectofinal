@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:proyectofinal/screens/cliente/cliente_screen.dart';
 import 'package:proyectofinal/screens/producto/producto_screen.dart';
 import 'package:proyectofinal/screens/sucursal/sucursal_screen.dart';
+import 'package:proyectofinal/screens/venta/venta_form_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'login_screen.dart';
 
@@ -38,9 +39,7 @@ class HomePage extends StatelessWidget {
           padding: EdgeInsets.all(0),
           children: [
             UserAccountsDrawerHeader(
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-              ),
+              decoration: BoxDecoration(color: Theme.of(context).primaryColor),
               accountName: Text('John Doe'),
               accountEmail: Text('john.doe@mail.com'),
             ),
@@ -49,7 +48,7 @@ class HomePage extends StatelessWidget {
               title: Text('Productos'),
               leading: Icon(Icons.shopping_cart),
               onTap: () {
-                Navigator.pop(context); 
+                Navigator.pop(context);
                 Navigator.pushNamed(context, ProductoScreen.routeName);
               },
             ),
@@ -57,7 +56,7 @@ class HomePage extends StatelessWidget {
               title: Text('Sucursales'),
               leading: Icon(Icons.store),
               onTap: () {
-                Navigator.pop(context); 
+                Navigator.pop(context);
                 Navigator.pushNamed(context, SucursalScreen.routeName);
               },
             ),
@@ -65,8 +64,16 @@ class HomePage extends StatelessWidget {
               title: Text('Clientes'),
               leading: Icon(Icons.person),
               onTap: () {
-                Navigator.pop(context); 
+                Navigator.pop(context);
                 Navigator.pushNamed(context, ClienteScreen.routeName);
+              },
+            ),
+            ListTile(
+              title: Text('Nueva Venta'),
+              leading: Icon(Icons.shopping_cart),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, VentaFormScreen.routeName);
               },
             ),
           ],

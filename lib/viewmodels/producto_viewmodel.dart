@@ -21,13 +21,6 @@ class ProductoViewModel with ChangeNotifier {
     _productos = await _repo.obtenerTodos(soloActivos: soloActivos);
     _inventarioPorProducto.clear();
 
-    // for (var producto in _productos) {
-    //   final inventario = await _repo.obtenerInventarioPorProducto(
-    //     producto.idProducto!,
-    //   );
-    //   _inventarioPorProducto[producto.idProducto!] = inventario;
-    // }
-
     notifyListeners();
   }
 

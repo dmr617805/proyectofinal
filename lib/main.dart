@@ -11,9 +11,11 @@ import 'package:proyectofinal/screens/producto/producto_form_screen.dart';
 import 'package:proyectofinal/screens/producto/producto_screen.dart';
 import 'package:proyectofinal/screens/sucursal/sucursal_form_screen.dart';
 import 'package:proyectofinal/screens/sucursal/sucursal_screen.dart';
+import 'package:proyectofinal/screens/venta/venta_form_screen.dart';
 import 'package:proyectofinal/viewmodels/cliente_viewmodel.dart';
 import 'package:proyectofinal/viewmodels/producto_viewmodel.dart';
 import 'package:proyectofinal/viewmodels/sucursal_viewmodel.dart';
+import 'package:proyectofinal/viewmodels/venta_viewmodel.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,6 +32,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ClienteViewModel()),
         ChangeNotifierProvider(create: (_) => SucursalViewModel()),
         ChangeNotifierProvider(create: (_) => ProductoViewModel()),
+        ChangeNotifierProvider(create: (_) => VentaViewModel()),
         // ChangeNotifierProvider(create: (_) => UsuarioViewModel()),
       ],
       child: MaterialApp(
@@ -74,6 +77,8 @@ class MyApp extends StatelessWidget {
                 builder: (_) => ProductoFormScreen(producto: producto),
               );
 
+            case VentaFormScreen.routeName:
+              return MaterialPageRoute(builder: (_) => const VentaFormScreen());
 
             default:
               return null;
