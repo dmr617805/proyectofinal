@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Proyecto Final',
-        theme: ThemeData(
+        theme: ThemeData(          
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         ),
         initialRoute: LoginScreen.routeName,

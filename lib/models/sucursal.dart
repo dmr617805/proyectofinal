@@ -44,6 +44,16 @@ class Sucursal {
   }
 
   @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Sucursal &&
+          runtimeType == other.runtimeType &&
+          idSucursal == other.idSucursal;
+
+  @override
+  int get hashCode => idSucursal.hashCode;
+
+  @override
   String toString() {
     return 'Sucursal(idSucursal: $idSucursal, nombre: $nombre, ubicacion: $ubicacion, isActive: $isActive)';
   }

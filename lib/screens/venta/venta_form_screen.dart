@@ -114,12 +114,13 @@ class _VentaFormScreenState extends State<VentaFormScreen> {
       idUsuario: usuarioViewModel.usuario!.idUsuario!,
       total: _calcularTotal(),
       fecha: DateTime.now(),
+      usuario: usuarioViewModel.usuario,
     );
 
     await Provider.of<VentaViewModel>(
       context,
       listen: false,
-    ).registrarVenta(venta, detalles, usuarioViewModel.usuario!);
+    ).registrarVenta(venta, detalles);
 
     if (mounted) {
       setState(() {
