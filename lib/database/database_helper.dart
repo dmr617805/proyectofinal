@@ -29,6 +29,22 @@ class DatabaseHelper {
 
   // Crear las tablas iniciales de la base de datos
   Future<void> _createDB(Database db, int version) async {
+
+    //Usuarios
+    await db.execute('''
+      CREATE TABLE usuario (
+        id_usuario INTEGER PRIMARY KEY AUTOINCREMENT,
+        nombre TEXT NOT NULL,
+        apellido_paterno TEXT NOT NULL,
+        apellido_materno TEXT,
+        correo TEXT NOT NULL UNIQUE,
+        password TEXT NOT NULL,
+        rol TEXT NOT NULL,
+        is_active INTEGER NOT NULL DEFAULT 1
+      )
+    ''');
+
+
     // Clientes
     await db.execute('''
       CREATE TABLE cliente (
@@ -88,10 +104,12 @@ class DatabaseHelper {
         id_sucursal INTEGER NOT NULL,
         id_cliente INTEGER NOT NULL,
         id_metodo_pago INTEGER NOT NULL,
+        id_usuario INTEGER NOT NULL,
         total REAL NOT NULL,
         FOREIGN KEY (id_sucursal) REFERENCES sucursal(id_sucursal),
         FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente),
-        FOREIGN KEY (id_metodo_pago) REFERENCES metodo_pago(id_metodo_pago)
+        FOREIGN KEY (id_metodo_pago) REFERENCES metodo_pago(id_metodo_pago),
+        FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
       )
     ''');
 
@@ -108,6 +126,11 @@ class DatabaseHelper {
   ''');
 
     final batch = db.batch();
+
+
+    // Insertar usuarios predeterminados
+    batch.insert('usuario', { 'nombre': 'Javier', 'apellido_paterno': 'Fuentes', 'apellido_materno': 'Lopez', 'correo': 'admin@gmail.com', 'password': '1234', 'rol': 'administrador', 'is_active': 1 });
+    batch.insert('usuario', { 'nombre': 'Alan', 'apellido_paterno': 'Mata', 'apellido_materno': 'Alfaro', 'correo': 'vendedor@gmail.com', 'password': '1234', 'rol': 'vendedor', 'is_active': 1 });
 
     // Insertar metodos de pago predeterminados
     batch.insert('metodo_pago', {'codigo': 'efectivo', 'descripcion':'Efectivo' , 'is_active': 1});

@@ -9,6 +9,7 @@ import 'package:proyectofinal/models/venta.dart';
 import 'package:proyectofinal/viewmodels/cliente_viewmodel.dart';
 import 'package:proyectofinal/viewmodels/producto_viewmodel.dart';
 import 'package:proyectofinal/viewmodels/sucursal_viewmodel.dart';
+import 'package:proyectofinal/viewmodels/usuario_viewmodel.dart';
 import 'package:proyectofinal/viewmodels/venta_viewmodel.dart';
 import 'package:proyectofinal/widgets/comun/boton_guardar.dart';
 import 'package:proyectofinal/widgets/metodo_pago/metodo_pago_selector.dart';
@@ -104,10 +105,13 @@ class _VentaFormScreenState extends State<VentaFormScreen> {
       _guardandoVenta = true;
     });
 
+    final usuarioViewModel = Provider.of<UsuarioViewModel>(context, listen: false);
+
     final venta = Venta(
       idCliente: clienteSeleccionado!.idCliente!,
       idSucursal: sucursalSeleccionada!.idSucursal!,
       idMetodoPago: metodoPagoSeleccionado!.idMetodoPago!,
+      idUsuario: usuarioViewModel.usuario!.idUsuario!,
       total: _calcularTotal(),
       fecha: DateTime.now(),
     );
@@ -115,7 +119,7 @@ class _VentaFormScreenState extends State<VentaFormScreen> {
     await Provider.of<VentaViewModel>(
       context,
       listen: false,
-    ).registrarVenta(venta, detalles);
+    ).registrarVenta(venta, detalles, usuarioViewModel.usuario!);
 
     if (mounted) {
       setState(() {

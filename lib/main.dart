@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:proyectofinal/models/cliente.dart';
 import 'package:proyectofinal/models/producto.dart';
 import 'package:proyectofinal/models/sucursal.dart';
+import 'package:proyectofinal/models/usuario.dart';
 import 'package:proyectofinal/screens/cliente/cliente_form_screen.dart';
 import 'package:proyectofinal/screens/cliente/cliente_screen.dart';
 import 'package:proyectofinal/screens/home_page.dart';
@@ -12,11 +13,14 @@ import 'package:proyectofinal/screens/producto/producto_form_screen.dart';
 import 'package:proyectofinal/screens/producto/producto_screen.dart';
 import 'package:proyectofinal/screens/sucursal/sucursal_form_screen.dart';
 import 'package:proyectofinal/screens/sucursal/sucursal_screen.dart';
+import 'package:proyectofinal/screens/usuario/usuario_form_screen.dart';
+import 'package:proyectofinal/screens/usuario/usuario_screen.dart';
 import 'package:proyectofinal/screens/venta/venta_form_screen.dart';
 import 'package:proyectofinal/viewmodels/cliente_viewmodel.dart';
 import 'package:proyectofinal/viewmodels/metodo_pago_viewmodel.dart';
 import 'package:proyectofinal/viewmodels/producto_viewmodel.dart';
 import 'package:proyectofinal/viewmodels/sucursal_viewmodel.dart';
+import 'package:proyectofinal/viewmodels/usuario_viewmodel.dart';
 import 'package:proyectofinal/viewmodels/venta_viewmodel.dart';
 
 void main() {
@@ -36,7 +40,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ProductoViewModel()),
         ChangeNotifierProvider(create: (_) => VentaViewModel()),
         ChangeNotifierProvider(create: (_) => MetodoPagoViewmodel()),
-        // ChangeNotifierProvider(create: (_) => UsuarioViewModel()),
+        ChangeNotifierProvider(create: (_) => UsuarioViewModel()),
       ],
       child: MaterialApp(
         title: 'Proyecto Final',
@@ -49,9 +53,8 @@ class MyApp extends StatelessWidget {
             case LoginScreen.routeName:
               return MaterialPageRoute(builder: (_) => const LoginScreen());
 
-            case HomePage.routeName:
-              final username = settings.arguments as String;
-              return MaterialPageRoute(builder: (_) => HomePage(username: username));
+            case HomePage.routeName:              
+              return MaterialPageRoute(builder: (_) => HomePage());
 
             case ClienteScreen.routeName:
               return MaterialPageRoute(builder: (_) => const ClienteScreen());
@@ -85,6 +88,16 @@ class MyApp extends StatelessWidget {
 
             case MetodoPagoFormScreen.routeName:
               return MaterialPageRoute(builder: (_) => const MetodoPagoFormScreen());
+
+           case UsuarioScreen.routeName:
+              return MaterialPageRoute(builder: (_) => const UsuarioScreen());
+
+            case UsuarioFormScreen.routeName:
+              final usuario = settings.arguments as Usuario?;
+              return MaterialPageRoute(
+                builder: (_) => UsuarioFormScreen(usuario: usuario),
+              );
+
 
             default:
               return null;

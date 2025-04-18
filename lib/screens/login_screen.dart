@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:proyectofinal/models/usuario.dart';
+import 'package:provider/provider.dart';
 import 'package:proyectofinal/screens/home_page.dart';
+import 'package:proyectofinal/viewmodels/usuario_viewmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -12,36 +13,24 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _correoController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isProcessing = false;
 
   Future<void> _login() async {
-    String username = _usernameController.text;
+    String correo = _correoController.text;
     String password = _passwordController.text;
 
     _isProcessing = true;
     // Validar credenciales
-    Usuario? validUser = usuarios.firstWhere(
-      (user) => user.username == username && user.password == password,
-      orElse: () => Usuario(username: "", password: ""),
-    );
+    final  viewModel = Provider.of<UsuarioViewModel>(context, listen: false);
 
-    if (validUser.username.isNotEmpty) {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString("username", validUser.username);
+    await viewModel.login(correo, password);
 
+    if (viewModel.usuario != null) {
       // Navegar a la pantalla de inicio
+      Navigator.pushReplacementNamed(context, HomePage.routeName);
 
-      Navigator.pushReplacementNamed(context, HomePage.routeName, arguments: validUser.username);
-
-      // Navigator.pushReplacement(
-      //   context,
-      //   MaterialPageRoute(
-      //     // builder: (context) => HomePage(username: validUser.username),
-      //     builder: (context) => ClienteScreen(),
-      //   ),
-      // );
     } else {
       // Mostrar error
       showDialog(
@@ -49,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
         builder:
             (context) => AlertDialog(
               title: Text("Error de autenticación"),
-              content: Text("Usuario o contraseña incorrectos"),
+              content: Text("Credenciales incorrectas"),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
@@ -143,9 +132,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
                               child: TextField(
-                                controller: _usernameController,
+                                controller: _correoController,
                                 decoration: InputDecoration(
-                                  hintText: 'Usuario',
+                                  hintText: 'Correo',
                                   hintStyle: TextStyle(
                                     color: Colors.green[900]!,
                                   ),
