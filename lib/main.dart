@@ -11,6 +11,7 @@ import 'package:proyectofinal/screens/login_screen.dart';
 import 'package:proyectofinal/screens/metodo_pago/metodo_pago_form_screen.dart';
 import 'package:proyectofinal/screens/producto/producto_form_screen.dart';
 import 'package:proyectofinal/screens/producto/producto_screen.dart';
+import 'package:proyectofinal/screens/reporte_inventario/reporte_inventario_screen.dart';
 import 'package:proyectofinal/screens/sucursal/sucursal_form_screen.dart';
 import 'package:proyectofinal/screens/sucursal/sucursal_screen.dart';
 import 'package:proyectofinal/screens/usuario/usuario_form_screen.dart';
@@ -98,6 +99,9 @@ class MyApp extends StatelessWidget {
                 builder: (_) => UsuarioFormScreen(usuario: usuario),
               );
 
+
+            case ReporteInventarioScreen.routeName:
+              return MaterialPageRoute(builder: (_) => const ReporteInventarioScreen());
 
             default:
               return null;

@@ -21,6 +21,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
   late TextEditingController _nombreController;
   late TextEditingController _descripcionController;
   late TextEditingController _precioController;
+  late TextEditingController _cantidadMinimaController;
   bool _isLoading = true;
   bool _guardandoProducto = false;
   final List<InventarioEntry> _inventarioControllers = [];
@@ -39,6 +40,10 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
     );
     _precioController = TextEditingController(
       text: producto?.precio?.toString() ?? '',
+    );
+
+    _cantidadMinimaController = TextEditingController(
+      text: producto?.cantidadMinima.toString() ?? '',
     );
 
     final sucursalVM = Provider.of<SucursalViewModel>(context, listen: false);
@@ -93,6 +98,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
         nombre: _nombreController.text,
         descripcion: _descripcionController.text,
         precio: double.tryParse(_precioController.text) ?? 0,
+        cantidadMinima: int.tryParse(_cantidadMinimaController.text) ?? 0,
         isActive: true,
         inventario: inventarioList,
       );
@@ -114,6 +120,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
     _nombreController.dispose();
     _descripcionController.dispose();
     _precioController.dispose();
+    _cantidadMinimaController.dispose();
     for (var entry in _inventarioControllers) {
       entry.controller.dispose();
     }
@@ -155,6 +162,16 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
                         decoration: const InputDecoration(labelText: 'Precio'),
                         keyboardType: TextInputType.numberWithOptions(
                           decimal: true,
+                        ),
+                        validator:
+                            (value) =>
+                                value!.isEmpty ? 'Campo obligatorio' : null,
+                      ),
+                      TextFormField(
+                        controller: _cantidadMinimaController,
+                        decoration: const InputDecoration(labelText: 'Cantidad mínima en stock'),
+                        keyboardType: TextInputType.numberWithOptions(
+                          decimal: false,
                         ),
                         validator:
                             (value) =>

@@ -1,6 +1,7 @@
 import 'package:proyectofinal/database/database_helper.dart';
 import 'package:proyectofinal/models/cliente.dart';
 import 'package:proyectofinal/models/detalle_venta.dart';
+import 'package:proyectofinal/models/metodo_pago.dart';
 import 'package:proyectofinal/models/sucursal.dart';
 import 'package:proyectofinal/models/usuario.dart';
 import 'package:proyectofinal/models/venta.dart';
@@ -32,7 +33,7 @@ class VentaRepository {
           UPDATE inventario
           SET cantidad_disponible = cantidad_disponible - ?
           WHERE id_producto = ? AND id_sucursal = ?
-        ''', [cantidadVendida, venta.idSucursal, productoId]);
+        ''', [cantidadVendida, productoId, venta.idSucursal]);
       }
     });
 
@@ -47,7 +48,6 @@ Future<List<Venta>> obtener({int? idUsuario}) async {
       v.id_venta,
       v.fecha,
       v.total,            
-      v.id_metodo_pago,
 
       c.id_cliente,
       c.nombre AS cliente_nombre,
@@ -63,12 +63,17 @@ Future<List<Venta>> obtener({int? idUsuario}) async {
       u.nombre AS usuario_nombre,
       u.apellido_paterno AS usuario_apellido_paterno,
       u.correo AS usuario_correo,
-      u.rol AS usuario_rol
+      u.rol AS usuario_rol,
+
+      mp.id_metodo_pago,
+      mp.codigo AS metodo_pago_codigo,
+      mp.descripcion AS metodo_pago_descripcion
 
     FROM venta v
     INNER JOIN cliente c ON v.id_cliente = c.id_cliente
     INNER JOIN sucursal s ON v.id_sucursal = s.id_sucursal
     INNER JOIN usuario u ON v.id_usuario = u.id_usuario
+    INNER JOIN metodo_pago mp ON v.id_metodo_pago = mp.id_metodo_pago
   ''';
 
   // Agregar condición si hay idUsuario
@@ -107,6 +112,12 @@ Future<List<Venta>> obtener({int? idUsuario}) async {
       password: '', 
     );
 
+    final metodoPago = MetodoPago(
+      idMetodoPago: row['id_metodo_pago'],
+      codigo: row['metodo_pago_codigo'],
+      descripcion: row['metodo_pago_descripcion'],
+    );
+
     return Venta(
       idVenta: row['id_venta'],
       fecha: DateTime.parse(row['fecha']),
@@ -118,6 +129,7 @@ Future<List<Venta>> obtener({int? idUsuario}) async {
       cliente: cliente,
       sucursal: sucursal,
       usuario: usuario,
+      metodoPago: metodoPago,
     );
   }).toList();
 }

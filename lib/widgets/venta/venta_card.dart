@@ -31,6 +31,7 @@ class VentaCard extends StatelessWidget {
             Text('Cliente: ${venta.cliente?.nombre ?? "N/A"}'),
             Text('Sucursal: ${venta.sucursal?.nombre ?? "N/A"}'),
             Text('Vendedor: ${venta.usuario?.nombre} ${venta.usuario?.apellidoPaterno ?? ""}'),
+            Text('Metodo Pago: ${venta.metodoPago?.descripcion ?? "N/A"}'),
           ],
         ),
       ),

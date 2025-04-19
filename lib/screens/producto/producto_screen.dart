@@ -25,7 +25,7 @@ class _ProductoScreenState extends State<ProductoScreen> {
   }
 
   Future<void> _loadData() async {
-    // Cargar los datos necesarios para la pantalla de productos.
+
     viewModel = Provider.of<ProductoViewModel>(context, listen: false);
     await viewModel.cargarProductosConInventario();
   }

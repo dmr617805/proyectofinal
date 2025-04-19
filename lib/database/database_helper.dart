@@ -72,6 +72,7 @@ class DatabaseHelper {
         nombre TEXT NOT NULL,
         descripcion TEXT,
         precio REAL NOT NULL,
+        cantidad_minima INTEGER NOT NULL,
         is_active INTEGER NOT NULL DEFAULT 1
       )
     ''');

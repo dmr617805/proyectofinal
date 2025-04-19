@@ -5,6 +5,7 @@ class Producto {
   final String nombre;
   final String? descripcion;
   final double? precio;
+  final int cantidadMinima;
   final bool isActive;
   final List<Inventario> inventario;
 
@@ -13,6 +14,7 @@ class Producto {
     required this.nombre,
     this.descripcion,
     required this.precio,
+    this.cantidadMinima = 0,
     this.isActive = true,
     this.inventario = const [],
   });
@@ -23,6 +25,7 @@ class Producto {
       'nombre': nombre,
       'descripcion': descripcion,
       'precio': precio,
+      'cantidad_minima': cantidadMinima,
       'is_active': isActive ? 1 : 0,
     };
   }
@@ -33,6 +36,7 @@ class Producto {
       nombre: map['nombre'],
       descripcion: map['descripcion'],
       precio: map['precio'] is int ? (map['precio'] as int).toDouble() : map['precio'],
+      cantidadMinima: map['cantidad_minima'] ?? 0,
       isActive: map['is_active'] == 1,
     );
   }
@@ -42,6 +46,7 @@ class Producto {
     String? nombre,
     String? descripcion,
     double? precio,
+    int? cantidadMinima,
     bool? isActive,
     List<Inventario>? inventario,
   }) {
@@ -50,6 +55,7 @@ class Producto {
       nombre: nombre ?? this.nombre,
       descripcion: descripcion ?? this.descripcion,
       precio: precio ?? this.precio,
+      cantidadMinima: cantidadMinima ?? this.cantidadMinima,
       isActive: isActive ?? this.isActive,
       inventario: inventario ?? this.inventario,
     );

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyectofinal/screens/cliente/cliente_screen.dart';
 import 'package:proyectofinal/screens/producto/producto_screen.dart';
+import 'package:proyectofinal/screens/reporte_inventario/reporte_inventario_screen.dart';
 import 'package:proyectofinal/screens/sucursal/sucursal_screen.dart';
 import 'package:proyectofinal/screens/usuario/usuario_screen.dart';
 import 'package:proyectofinal/screens/venta/venta_screen.dart';
@@ -78,6 +79,14 @@ class HomePage extends StatelessWidget {
             onTap: () {
               Navigator.pop(context);
               Navigator.pushNamed(context, VentaFormScreen.routeName);
+            },
+          ),          
+          ListTile(
+            title: Text('Reporte de Inventario'),
+            leading: Icon(Icons.inventory),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, ReporteInventarioScreen.routeName);
             },
           ),
           ListTile(

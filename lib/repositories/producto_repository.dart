@@ -1,6 +1,7 @@
 import 'package:proyectofinal/database/database_helper.dart';
 import 'package:proyectofinal/models/producto.dart';
 import 'package:proyectofinal/models/inventario.dart';
+import 'package:proyectofinal/models/reporte_inventario.dart';
 
 class ProductoRepository {
   final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
@@ -55,7 +56,7 @@ class ProductoRepository {
       whereArgs: soloActivos ? [1] : null,
     );
 
-    maps.map((map) =>  productos.add(Producto.fromMap(map))).toList();
+    maps.map((map) => productos.add(Producto.fromMap(map))).toList();
 
     // Obtener inventario para cada producto
     for (int i = 0; i < productos.length; i++) {
@@ -115,5 +116,38 @@ class ProductoRepository {
       'id_producto = ? AND id_sucursal = ?',
       [idProducto, idSucursal],
     );
+  }
+
+  // obtener reporte de inventario
+
+  Future<List<ReporteInventario>> obtenerReporteInventario() async {
+    final db = await _databaseHelper.database;
+
+    final String query = '''
+      SELECT 
+          p.id_producto,
+          s.id_sucursal, 
+          p.descripcion AS producto,
+          s.nombre AS sucursal,
+          IFNULL(i.cantidad_disponible, 0) AS cantidad_disponible,
+          p.cantidad_minima,
+          p.precio
+      FROM producto p
+      CROSS JOIN sucursal s
+      LEFT JOIN inventario i 
+          ON i.id_producto = p.id_producto 
+          AND i.id_sucursal = s.id_sucursal
+      WHERE p.is_active = 1
+      ORDER BY s.nombre, p.descripcion
+  ''';
+
+    final List<Map<String, dynamic>> maps = await db.rawQuery(query);
+
+    if (maps.isEmpty) return [];
+
+    return List.generate(maps.length, (i) {
+      return ReporteInventario.fromMap(maps[i]);
+    });
+
   }
 }

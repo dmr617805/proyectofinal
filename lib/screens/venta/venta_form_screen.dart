@@ -101,6 +101,28 @@ class _VentaFormScreenState extends State<VentaFormScreen> {
       return;
     }
 
+    final inventario =
+        await Provider.of<ProductoViewModel>(
+          context,
+          listen: false,
+        ).obtenerReporteInventario();
+    for (var detalle in detalles) {
+      final producto = inventario.firstWhere(
+        (p) =>
+            p.idProducto == detalle.idProducto &&
+            p.idSucursal == sucursalSeleccionada!.idSucursal,
+        orElse: () => throw Exception('Producto no encontrado'),
+      );
+      if (producto.cantidadDisponible < detalle.cantidad) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('No hay suficiente stock para ${producto.producto}'),
+          ),
+        );
+        return;
+      }
+    }
+
     setState(() {
       _guardandoVenta = true;
     });
@@ -132,7 +154,6 @@ class _VentaFormScreenState extends State<VentaFormScreen> {
   }
 
   @override
-  @override
   Widget build(BuildContext context) {
     final clienteVM = Provider.of<ClienteViewModel>(context);
     final sucursalVM = Provider.of<SucursalViewModel>(context);
@@ -148,25 +169,33 @@ class _VentaFormScreenState extends State<VentaFormScreen> {
             DropdownButtonFormField<Cliente>(
               decoration: const InputDecoration(labelText: 'Cliente'),
               value: clienteSeleccionado,
-              items: clienteVM.clientes
-                  .map((cliente) => DropdownMenuItem(
-                        value: cliente,
-                        child: Text(cliente.nombre),
-                      ))
-                  .toList(),
-              onChanged: (cliente) => setState(() => clienteSeleccionado = cliente),
+              items:
+                  clienteVM.clientes
+                      .map(
+                        (cliente) => DropdownMenuItem(
+                          value: cliente,
+                          child: Text(cliente.nombre),
+                        ),
+                      )
+                      .toList(),
+              onChanged:
+                  (cliente) => setState(() => clienteSeleccionado = cliente),
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<Sucursal>(
               decoration: const InputDecoration(labelText: 'Sucursal'),
               value: sucursalSeleccionada,
-              items: sucursalVM.sucursales
-                  .map((sucursal) => DropdownMenuItem(
-                        value: sucursal,
-                        child: Text(sucursal.nombre),
-                      ))
-                  .toList(),
-              onChanged: (sucursal) => setState(() => sucursalSeleccionada = sucursal),
+              items:
+                  sucursalVM.sucursales
+                      .map(
+                        (sucursal) => DropdownMenuItem(
+                          value: sucursal,
+                          child: Text(sucursal.nombre),
+                        ),
+                      )
+                      .toList(),
+              onChanged:
+                  (sucursal) => setState(() => sucursalSeleccionada = sucursal),
             ),
             const SizedBox(height: 8),
 
@@ -198,18 +227,17 @@ class _VentaFormScreenState extends State<VentaFormScreen> {
             TotalesWidget(
               totalProductos: _calcularCantidadTotal(),
               totalPagar: _calcularTotal(),
-            ),            
+            ),
             const SizedBox(height: 16),
             BotonGuardar(
               isLoading: _guardandoVenta,
               texto: 'Crear Venta',
-              onPressed: _guardarVenta
+              onPressed: _guardarVenta,
             ),
-             const SizedBox(height: 16),
+            const SizedBox(height: 16),
           ],
         ),
       ),
-
     );
   }
 }

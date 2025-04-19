@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:proyectofinal/models/producto.dart';
 import 'package:proyectofinal/models/inventario.dart';
+import 'package:proyectofinal/models/reporte_inventario.dart';
 import 'package:proyectofinal/repositories/producto_repository.dart';
 
 class ProductoViewModel with ChangeNotifier {
@@ -51,6 +52,12 @@ class ProductoViewModel with ChangeNotifier {
     await _repo.eliminar(idProducto);
     await _repo.eliminarInventarioPorProducto(idProducto);
     await cargarProductosConInventario();
+  }
+
+
+  // Obtener reporte de inventario
+  Future<List<ReporteInventario>> obtenerReporteInventario() async {
+    return await _repo.obtenerReporteInventario();
   }
 
   /// Actualizar cantidad de inventario de un producto en una sucursal específica

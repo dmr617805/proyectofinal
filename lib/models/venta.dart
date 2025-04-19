@@ -1,4 +1,5 @@
 import 'package:proyectofinal/models/cliente.dart';
+import 'package:proyectofinal/models/metodo_pago.dart';
 import 'package:proyectofinal/models/sucursal.dart';
 import 'package:proyectofinal/models/usuario.dart';
 
@@ -13,6 +14,7 @@ class Venta {
   final Cliente? cliente;
   final Sucursal? sucursal;
   final Usuario? usuario;
+  final MetodoPago? metodoPago;
 
   Venta({
     this.idVenta,
@@ -25,6 +27,7 @@ class Venta {
     this.cliente,
     this.sucursal,
     this.usuario,
+    this.metodoPago,
   });
 
   Map<String, dynamic> toMap() {
@@ -63,6 +66,7 @@ class Venta {
     Cliente? cliente,
     Sucursal? sucursal,
     Usuario? usuario,
+    MetodoPago? metodoPago,
   }) {
     return Venta(
       idVenta: idVenta ?? this.idVenta,
@@ -75,6 +79,7 @@ class Venta {
       cliente: cliente ?? this.cliente,
       sucursal: sucursal ?? this.sucursal,
       usuario: usuario ?? this.usuario,
+      metodoPago: metodoPago ?? this.metodoPago,
     );
   }
 
