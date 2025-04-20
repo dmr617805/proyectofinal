@@ -24,7 +24,15 @@ class DatabaseHelper {
   // 2.- Crear el archivo de base de datos si no existe
   Future<Database> _initDB_() async {
     String path = join(await getDatabasesPath(), 'dmr_ventasapp_system.db');
-    return await openDatabase(path, version: 1, onCreate: _createDB);
+
+    return await openDatabase(
+      path,
+      version: 1,
+      onConfigure: (db) async {      
+        await db.execute('PRAGMA foreign_keys = ON');
+      },
+      onCreate: _createDB,
+    );
   }
 
   // Crear las tablas iniciales de la base de datos

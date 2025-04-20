@@ -150,7 +150,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Bienvenido $nombre',
+          'Bienvenido ${usuario?.nombre}',
           style: TextStyle(
             color:Theme.of(context).colorScheme.onPrimary,
             fontSize: 24,
