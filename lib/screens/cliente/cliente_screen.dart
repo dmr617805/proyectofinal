@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:proyectofinal/screens/cliente/cliente_form_screen.dart';
 import 'package:proyectofinal/viewmodels/cliente_viewmodel.dart';
 import 'package:proyectofinal/widgets/cliente_card.dart';
+import 'package:proyectofinal/widgets/comun/screen_appbar.dart';
 
 class ClienteScreen extends StatefulWidget {
   static const String routeName = '/clientes';
@@ -30,7 +31,9 @@ class _ClienteScreenState extends State<ClienteScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Clientes')),
+      appBar: ScreenAppbar(
+        title: 'Clientes',        
+      ),   
       body: Consumer<ClienteViewModel>(
         builder: (context, viewModel, child) {
           // Verificamos el estado de la conexión con la base de datos.

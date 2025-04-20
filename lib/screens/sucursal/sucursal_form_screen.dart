@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:proyectofinal/models/sucursal.dart';
 import 'package:proyectofinal/viewmodels/sucursal_viewmodel.dart';
 import 'package:proyectofinal/widgets/comun/boton_guardar.dart';
+import 'package:proyectofinal/widgets/comun/screen_appbar.dart';
 
 class SucursalFormScreen extends StatefulWidget {
   static const String routeName = '/sucursal_form';
@@ -64,9 +65,9 @@ class _SucursalFormScreenState extends State<SucursalFormScreen> {
     final esEdicion = widget.sucursal != null;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(esEdicion ? 'Editar Sucursal' : 'Nueva Sucursal'),
-      ),
+      appBar: ScreenAppbar(
+        title: esEdicion ? 'Editar Sucursal' : 'Nueva Sucursal',        
+      ),  
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(

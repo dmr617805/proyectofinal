@@ -124,7 +124,7 @@ class _VentaScreenState extends State<VentaScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold(              
       appBar: AppBar(title: Text(titulo, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),)),
       body: Consumer<VentaViewModel>(
         builder: (context, vm, child) {

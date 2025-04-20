@@ -14,41 +14,71 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _correoController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _isProcessing = false;
+  bool _validandoUsuario = false;
 
   Future<void> _login() async {
     String correo = _correoController.text;
     String password = _passwordController.text;
 
-    _isProcessing = true;
+    setState(() {
+      _validandoUsuario = true;
+    });
+
     // Validar credenciales
-    final  viewModel = Provider.of<UsuarioViewModel>(context, listen: false);
+    final viewModel = Provider.of<UsuarioViewModel>(context, listen: false);
 
     await viewModel.login(correo, password);
 
     if (viewModel.usuario != null) {
       // Navegar a la pantalla de inicio
       Navigator.pushReplacementNamed(context, HomePage.routeName);
-
     } else {
-      // Mostrar error
       showDialog(
         context: context,
         builder:
             (context) => AlertDialog(
-              title: Text("Error de autenticación"),
-              content: Text("Credenciales incorrectas"),
+              title: Text(
+                "Error de autenticación",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+              content: Text(
+                "Credenciales incorrectas",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
               actions: [
                 TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    foregroundColor:Theme.of(context).colorScheme.onPrimary,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 12,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
                   onPressed: () => Navigator.pop(context),
-                  child: Text("Aceptar"),
+                  child: Text("Aceptar", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                 ),
               ],
             ),
       );
     }
 
-    _isProcessing = false;
+    if (mounted) {
+      setState(() {
+        _validandoUsuario = false;
+      });
+    }
   }
 
   @override
@@ -56,23 +86,23 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Ventas App',
+          'Ventax',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
+            fontSize: 24,
+            fontWeight: FontWeight.w700,
           ),
         ),
-        backgroundColor: Colors.green[900],
+        backgroundColor: Colors.deepPurple[900],
       ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             colors: [
-              Colors.green[900]!,
-              Colors.green[800]!,
-              Colors.green[400]!,
+              Colors.deepPurple[900]!,
+              Colors.deepPurple[700]!,
+              Colors.deepPurple[300]!,
             ],
           ),
         ),
@@ -88,12 +118,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(height: 10),
                   Text(
                     'Bienvenido',
-                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.w700),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 50),
+            SizedBox(height: 100),
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
@@ -135,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 decoration: InputDecoration(
                                   hintText: 'Correo',
                                   hintStyle: TextStyle(
-                                    color: Colors.green[900]!,
+                                    color: Colors.deepPurple[900]!,
                                   ),
                                   border: InputBorder.none,
                                 ),
@@ -154,7 +184,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 decoration: InputDecoration(
                                   hintText: 'Contraseña',
                                   hintStyle: TextStyle(
-                                    color: Colors.green[900]!,
+                                    color: Colors.deepPurple[900]!,
                                   ),
                                   border: InputBorder.none,
                                 ),
@@ -166,44 +196,46 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(height: 120),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green[900],
-                          padding: const EdgeInsets.all(16),
+                          backgroundColor: Colors.deepPurple[900],
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 50,
+                            vertical: 15,
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                        onPressed: _isProcessing ? null : _login,
-                        child:
-                            _isProcessing
-                                ? const CircularProgressIndicator()
-                                : Text(
-                                  'Iniciar Sesión',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                      ),
-                      SizedBox(height: 20),
-                      Container(
-                        height: 50,
-                        margin: EdgeInsets.symmetric(horizontal: 50),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.green[900],
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Iniciar Sesión',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                        onPressed: _validandoUsuario ? null : _login,
+                        child: SizedBox(
+                          height: 20,
+                          width: 130, // Mantén un ancho estable
+                          child: Center(
+                            child:
+                                _validandoUsuario
+                                    ? const SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                              Colors.white,
+                                            ),
+                                        strokeWidth: 2.5,
+                                      ),
+                                    )
+                                    : const Text(
+                                      'Iniciar Sesión',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                           ),
                         ),
                       ),
+
+                      SizedBox(height: 20),
                     ],
                   ),
                 ),

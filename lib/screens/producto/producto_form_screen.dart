@@ -6,6 +6,7 @@ import 'package:proyectofinal/models/sucursal.dart';
 import 'package:proyectofinal/viewmodels/producto_viewmodel.dart';
 import 'package:proyectofinal/viewmodels/sucursal_viewmodel.dart';
 import 'package:proyectofinal/widgets/comun/boton_guardar.dart';
+import 'package:proyectofinal/widgets/comun/screen_appbar.dart';
 
 class ProductoFormScreen extends StatefulWidget {
   static const String routeName = '/producto_form';
@@ -132,9 +133,9 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
     final esEdicion = widget.producto != null;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(esEdicion ? 'Editar Producto' : 'Nuevo Producto'),
-      ),
+      appBar: ScreenAppbar(
+        title: esEdicion ? 'Editar Producto' : 'Nuevo Producto',        
+      ),  
       body:
           _isLoading
               ? const Center(child: CircularProgressIndicator())

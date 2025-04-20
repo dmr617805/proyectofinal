@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:proyectofinal/models/cliente.dart';
 import 'package:proyectofinal/viewmodels/cliente_viewmodel.dart';
 import 'package:proyectofinal/widgets/comun/boton_guardar.dart';
+import 'package:proyectofinal/widgets/comun/screen_appbar.dart';
 
 class ClienteFormScreen extends StatefulWidget {
   static const String routeName = '/cliente_form';
@@ -63,12 +64,15 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
         _guardandoCliente = true;
       });
 
-      await Provider.of<ClienteViewModel>(context, listen: false).guardar(cliente);
-      
+      await Provider.of<ClienteViewModel>(
+        context,
+        listen: false,
+      ).guardar(cliente);
+
       if (mounted) {
         setState(() {
           _guardandoCliente = false;
-        });        
+        });
       }
 
       Navigator.pop(context); // Volver a la pantalla anterior
@@ -80,9 +84,9 @@ class _ClienteFormScreenState extends State<ClienteFormScreen> {
     final esEdicion = widget.cliente != null;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(esEdicion ? 'Editar Cliente' : 'Nuevo Cliente'),
-      ),
+      appBar: ScreenAppbar(
+        title: esEdicion ? 'Editar Cliente' : 'Nuevo Cliente',        
+      ),      
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(

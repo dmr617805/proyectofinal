@@ -48,7 +48,7 @@ class UsuarioRepository {
   Future<Usuario?> login(String correo, String password) async {
     final List<Map<String, dynamic>> maps = await _databaseHelper.query(
       'usuario',
-      whereClause: 'correo = ? AND password = ?',
+      whereClause: 'correo = ? AND password = ? AND is_active = 1',
       whereArgs: [correo, password],
     );
 

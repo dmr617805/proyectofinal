@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyectofinal/screens/usuario/usuario_form_screen.dart';
 import 'package:proyectofinal/viewmodels/usuario_viewmodel.dart';
+import 'package:proyectofinal/widgets/comun/screen_appbar.dart';
 import 'package:proyectofinal/widgets/usuario/usuario_card.dart';
 
 
@@ -30,8 +31,8 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Usuarios')),
+    return Scaffold(      
+      appBar: ScreenAppbar(title: 'Usuarios'),
       body: Consumer<UsuarioViewModel>(
         builder: (context, vm, child) {
           if (vm.usuarios.isEmpty) {

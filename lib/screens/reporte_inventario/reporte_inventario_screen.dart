@@ -4,8 +4,8 @@ import 'package:proyectofinal/models/reporte_inventario.dart';
 import 'package:proyectofinal/models/sucursal.dart';
 import 'package:proyectofinal/viewmodels/producto_viewmodel.dart';
 import 'package:proyectofinal/viewmodels/sucursal_viewmodel.dart';
+import 'package:proyectofinal/widgets/comun/screen_appbar.dart';
 import 'package:proyectofinal/widgets/reporte_inventario/reporte_inventario_card.dart';
-
 
 class ReporteInventarioScreen extends StatefulWidget {
   static const String routeName = '/reporte-inventario';
@@ -13,7 +13,8 @@ class ReporteInventarioScreen extends StatefulWidget {
   const ReporteInventarioScreen({super.key});
 
   @override
-  State<ReporteInventarioScreen> createState() => _ReporteInventarioScreenState();
+  State<ReporteInventarioScreen> createState() =>
+      _ReporteInventarioScreenState();
 }
 
 class _ReporteInventarioScreenState extends State<ReporteInventarioScreen> {
@@ -42,9 +43,13 @@ class _ReporteInventarioScreenState extends State<ReporteInventarioScreen> {
     await sucursalViewModel.cargarSucursales();
   }
 
-  List<ReporteInventario> _filtrarPorSucursal(List<ReporteInventario> reportes) {
+  List<ReporteInventario> _filtrarPorSucursal(
+    List<ReporteInventario> reportes,
+  ) {
     if (_sucursalSeleccionada == null) return reportes;
-    return reportes.where((r) => r.sucursal == _sucursalSeleccionada?.nombre).toList();
+    return reportes
+        .where((r) => r.sucursal == _sucursalSeleccionada?.nombre)
+        .toList();
   }
 
   void _limpiarFiltro() {
@@ -56,7 +61,7 @@ class _ReporteInventarioScreenState extends State<ReporteInventarioScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Reporte de Inventario')),
+      appBar: ScreenAppbar(title: 'Reporte de Inventario'),
       body: FutureBuilder<List<ReporteInventario>>(
         future: _reporteFuture,
         builder: (context, snapshot) {
@@ -81,17 +86,20 @@ class _ReporteInventarioScreenState extends State<ReporteInventarioScreen> {
                   children: [
                     Expanded(
                       child: DropdownButtonFormField<Sucursal>(
-                        decoration: const InputDecoration(labelText: 'Sucursal'),
+                        decoration: const InputDecoration(
+                          labelText: 'Sucursal',
+                        ),
                         value: _sucursalSeleccionada,
                         isExpanded: true,
-                        items: sucursales
-                            .map(
-                              (sucursal) => DropdownMenuItem(
-                                value: sucursal,
-                                child: Text(sucursal.nombre),
-                              ),
-                            )
-                            .toList(),
+                        items:
+                            sucursales
+                                .map(
+                                  (sucursal) => DropdownMenuItem(
+                                    value: sucursal,
+                                    child: Text(sucursal.nombre),
+                                  ),
+                                )
+                                .toList(),
                         onChanged: (sucursal) {
                           setState(() {
                             _sucursalSeleccionada = sucursal;
@@ -103,7 +111,8 @@ class _ReporteInventarioScreenState extends State<ReporteInventarioScreen> {
                     IconButton(
                       icon: const Icon(Icons.clear),
                       tooltip: 'Borrar filtro',
-                      onPressed: _sucursalSeleccionada == null ? null : _limpiarFiltro,
+                      onPressed:
+                          _sucursalSeleccionada == null ? null : _limpiarFiltro,
                     ),
                   ],
                 ),
@@ -113,9 +122,7 @@ class _ReporteInventarioScreenState extends State<ReporteInventarioScreen> {
                   itemCount: reportesFiltrados.length,
                   itemBuilder: (context, index) {
                     final reporte = reportesFiltrados[index];
-                    return ReporteInventarioCard(
-                      reporte: reporte,
-                    );
+                    return ReporteInventarioCard(reporte: reporte);
                   },
                 ),
               ),

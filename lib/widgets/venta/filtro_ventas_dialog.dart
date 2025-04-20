@@ -43,12 +43,18 @@ class _FiltroVentasDialogState extends State<FiltroVentasDialog> {
           children: [
             Align(
               alignment: Alignment.centerLeft,
-              child: FilledButton.icon(
+              child: ElevatedButton.icon(
                 icon: const Icon(Icons.date_range),
                 label: Text(
                   fechaSeleccionada != null
                       ? '${fechaSeleccionada!.day}/${fechaSeleccionada!.month}/${fechaSeleccionada!.year}'
                       : 'Seleccionar fecha',
+                ),
+               style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
                 onPressed: () async {
                   final picked = await showDatePicker(

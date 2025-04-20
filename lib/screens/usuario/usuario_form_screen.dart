@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:proyectofinal/models/usuario.dart';
 import 'package:proyectofinal/viewmodels/usuario_viewmodel.dart';
 import 'package:proyectofinal/widgets/comun/boton_guardar.dart';
+import 'package:proyectofinal/widgets/comun/screen_appbar.dart';
 
 
 class UsuarioFormScreen extends StatefulWidget {
@@ -85,9 +86,9 @@ class _UsuarioFormScreenState extends State<UsuarioFormScreen> {
     final esEdicion = widget.usuario != null;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(esEdicion ? 'Editar Usuario' : 'Nuevo Usuario'),
-      ),
+      appBar: ScreenAppbar(
+        title: esEdicion ? 'Editar Usuario' : 'Nuevo Usuario',        
+      ),  
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(

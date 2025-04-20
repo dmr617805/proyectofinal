@@ -12,6 +12,7 @@ import 'package:proyectofinal/viewmodels/sucursal_viewmodel.dart';
 import 'package:proyectofinal/viewmodels/usuario_viewmodel.dart';
 import 'package:proyectofinal/viewmodels/venta_viewmodel.dart';
 import 'package:proyectofinal/widgets/comun/boton_guardar.dart';
+import 'package:proyectofinal/widgets/comun/screen_appbar.dart';
 import 'package:proyectofinal/widgets/metodo_pago/metodo_pago_selector.dart';
 import 'package:proyectofinal/widgets/venta/agregar_producto_widget.dart';
 import 'package:proyectofinal/widgets/venta/lista_detalle_productos_widget.dart';
@@ -159,8 +160,8 @@ class _VentaFormScreenState extends State<VentaFormScreen> {
     final sucursalVM = Provider.of<SucursalViewModel>(context);
     final productoVM = Provider.of<ProductoViewModel>(context);
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Registrar Venta')),
+    return Scaffold(      
+      appBar: ScreenAppbar(title: 'Registrar Venta'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

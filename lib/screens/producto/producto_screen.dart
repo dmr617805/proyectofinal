@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:proyectofinal/screens/producto/producto_form_screen.dart';
 import 'package:proyectofinal/viewmodels/producto_viewmodel.dart';
+import 'package:proyectofinal/widgets/comun/screen_appbar.dart';
 import 'package:proyectofinal/widgets/producto_card.dart';
 
 class ProductoScreen extends StatefulWidget {
@@ -33,8 +34,8 @@ class _ProductoScreenState extends State<ProductoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      appBar: AppBar(title: const Text('Productos')),
+    return  Scaffold(      
+      appBar: ScreenAppbar(title: 'Productos'),
       body: Consumer<ProductoViewModel>(
         builder: (context, viewModel, child) {
           if (viewModel.productos.isEmpty) {

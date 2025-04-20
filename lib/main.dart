@@ -12,6 +12,7 @@ import 'package:proyectofinal/screens/metodo_pago/metodo_pago_form_screen.dart';
 import 'package:proyectofinal/screens/producto/producto_form_screen.dart';
 import 'package:proyectofinal/screens/producto/producto_screen.dart';
 import 'package:proyectofinal/screens/reporte_inventario/reporte_inventario_screen.dart';
+import 'package:proyectofinal/screens/reporte_ventas/reporte_ventas_screen.dart';
 import 'package:proyectofinal/screens/sucursal/sucursal_form_screen.dart';
 import 'package:proyectofinal/screens/sucursal/sucursal_screen.dart';
 import 'package:proyectofinal/screens/usuario/usuario_form_screen.dart';
@@ -20,6 +21,7 @@ import 'package:proyectofinal/screens/venta/venta_form_screen.dart';
 import 'package:proyectofinal/viewmodels/cliente_viewmodel.dart';
 import 'package:proyectofinal/viewmodels/metodo_pago_viewmodel.dart';
 import 'package:proyectofinal/viewmodels/producto_viewmodel.dart';
+import 'package:proyectofinal/viewmodels/reporte_ventas_viewmodel.dart';
 import 'package:proyectofinal/viewmodels/sucursal_viewmodel.dart';
 import 'package:proyectofinal/viewmodels/usuario_viewmodel.dart';
 import 'package:proyectofinal/viewmodels/venta_viewmodel.dart';
@@ -42,6 +44,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => VentaViewModel()),
         ChangeNotifierProvider(create: (_) => MetodoPagoViewmodel()),
         ChangeNotifierProvider(create: (_) => UsuarioViewModel()),
+        ChangeNotifierProvider(create: (_) => ReporteVentasViewModel()),
       ],
       child: MaterialApp(
         title: 'Proyecto Final',
@@ -102,6 +105,9 @@ class MyApp extends StatelessWidget {
 
             case ReporteInventarioScreen.routeName:
               return MaterialPageRoute(builder: (_) => const ReporteInventarioScreen());
+
+            case ReporteVentasScreen.routeName:
+              return MaterialPageRoute(builder: (_) => const ReporteVentasScreen());
 
             default:
               return null;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyectofinal/viewmodels/metodo_pago_viewmodel.dart';
+import 'package:proyectofinal/widgets/comun/screen_appbar.dart';
 import 'package:proyectofinal/widgets/metodo_pago/metodo_pago_card.dart';
 
 class MetodoPagoFormScreen extends StatefulWidget {
@@ -45,7 +46,7 @@ class _MetodoPagoFormScreenState extends State<MetodoPagoFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Método de Pago')),
+      appBar: ScreenAppbar(title: 'Método de Pago'),
       body: Consumer<MetodoPagoViewmodel>(
         builder: (context, vm, child) {
           if (vm.metodosPago.isEmpty) {

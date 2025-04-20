@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyectofinal/screens/sucursal/sucursal_form_screen.dart';
 import 'package:proyectofinal/viewmodels/sucursal_viewmodel.dart';
+import 'package:proyectofinal/widgets/comun/screen_appbar.dart';
 import 'package:proyectofinal/widgets/sucursal_card.dart';
 
 class SucursalScreen extends StatefulWidget {
@@ -30,8 +31,8 @@ class _SucursalScreenState extends State<SucursalScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Sucursales')),
+    return Scaffold(      
+      appBar: ScreenAppbar(title: 'Sucursales'),
       body: Consumer<SucursalViewModel>(
         builder: (context, vm, child) {
           if (vm.sucursales.isEmpty) {
