@@ -4,6 +4,7 @@ import 'package:proyectofinal/models/cliente.dart';
 import 'package:proyectofinal/models/detalle_venta.dart';
 import 'package:proyectofinal/models/metodo_pago.dart';
 import 'package:proyectofinal/models/producto.dart';
+import 'package:proyectofinal/models/reporte_inventario.dart';
 import 'package:proyectofinal/models/sucursal.dart';
 import 'package:proyectofinal/models/venta.dart';
 import 'package:proyectofinal/viewmodels/cliente_viewmodel.dart';
@@ -82,7 +83,6 @@ class _VentaFormScreenState extends State<VentaFormScreen> {
       detalles.removeAt(index);
     });
   }
-
   double _calcularTotal() {
     return detalles.fold(0.0, (total, d) => total + d.precioUnitario * d.cantidad);
   }
@@ -92,21 +92,83 @@ class _VentaFormScreenState extends State<VentaFormScreen> {
   }
 
   void _guardarVenta() async {
-    if (clienteSeleccionado == null ||
-        sucursalSeleccionada == null ||
-        metodoPagoSeleccionado == null ||
-        detalles.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Por favor completa todos los campos.')),
-      );
-      return;
+    if (!_validarFormulario()) return;
+
+    try {
+      setState(() => _guardandoVenta = true);
+
+      final inventario = await Provider.of<ProductoViewModel>(context,listen: false,).obtenerReporteInventario();
+      if (!_verificarStock(inventario)) return;
+
+      final venta = _construirVenta();
+
+      final ventaViewModel = Provider.of<VentaViewModel>(context,listen: false,);
+      await ventaViewModel.registrarVenta(venta, detalles);
+
+      if (!mounted) return;
+
+      _mostrarSnackBar('Pago registrado exitosamente', 'exitoso');
+
+      await Future.delayed(const Duration(seconds: 2));
+      Navigator.pop(context);
+
+    } catch (e) {
+      _mostrarSnackBar('Ocurrió un error: ${e.toString()}', 'error');
+    } finally {
+      if (mounted) {
+        setState(() => _guardandoVenta = false);
+      }
+    }
+  }
+
+  void _mostrarSnackBar(String mensaje, String  tipo) {
+    if (!mounted) return;
+
+    Color colorDeFondo = Colors.blue;
+    switch (tipo) {
+      case 'error':
+        colorDeFondo = const Color.fromARGB(255, 231, 119, 111);
+        break;
+      case 'advertencia':
+        colorDeFondo = const Color.fromARGB(255, 241, 228, 155);
+        break;
+      case 'exitoso':
+        colorDeFondo = const Color.fromARGB(255, 111, 240, 115);
+        break;
     }
 
-    final inventario =
-        await Provider.of<ProductoViewModel>(
-          context,
-          listen: false,
-        ).obtenerReporteInventario();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(mensaje, style: TextStyle(color:  Colors.black, fontSize: 14),),
+        backgroundColor: colorDeFondo,
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  bool _validarFormulario() {
+    if (clienteSeleccionado == null) {
+      _mostrarSnackBar('Seleccione un cliente', 'advertencia');
+      return false;
+    }
+    if (sucursalSeleccionada == null) {
+      _mostrarSnackBar('Seleccione una sucursal','advertencia');
+      return false;
+    }
+    if (detalles.isEmpty) {
+      _mostrarSnackBar('Agregue al menos un producto', 'advertencia');
+      return false;
+    }
+    if (metodoPagoSeleccionado == null) {
+      _mostrarSnackBar('Seleccione un método de pago', 'advertencia');
+      return false;
+    }
+    return true;
+  }
+
+
+  bool _verificarStock(List<ReporteInventario> inventario) {
     for (var detalle in detalles) {
       final producto = inventario.firstWhere(
         (p) =>
@@ -114,23 +176,19 @@ class _VentaFormScreenState extends State<VentaFormScreen> {
             p.idSucursal == sucursalSeleccionada!.idSucursal,
         orElse: () => throw Exception('Producto no encontrado'),
       );
+
       if (producto.cantidadDisponible < detalle.cantidad) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('No hay suficiente stock para ${producto.producto}'),
-          ),
-        );
-        return;
+        _mostrarSnackBar('No hay suficiente stock para ${producto.producto}', 'advertencia');
+        return false;
       }
     }
+    return true;
+  }
 
-    setState(() {
-      _guardandoVenta = true;
-    });
+  Venta _construirVenta() {
+    final usuarioViewModel = Provider.of<UsuarioViewModel>(context,listen: false,);
 
-    final usuarioViewModel = Provider.of<UsuarioViewModel>(context, listen: false);
-
-    final venta = Venta(
+    return Venta(
       idCliente: clienteSeleccionado!.idCliente!,
       idSucursal: sucursalSeleccionada!.idSucursal!,
       idMetodoPago: metodoPagoSeleccionado!.idMetodoPago!,
@@ -139,19 +197,6 @@ class _VentaFormScreenState extends State<VentaFormScreen> {
       fecha: DateTime.now(),
       usuario: usuarioViewModel.usuario,
     );
-
-    await Provider.of<VentaViewModel>(
-      context,
-      listen: false,
-    ).registrarVenta(venta, detalles);
-
-    if (mounted) {
-      setState(() {
-        _guardandoVenta = false;
-      });
-    }
-
-    Navigator.pop(context);
   }
 
   @override
@@ -160,7 +205,7 @@ class _VentaFormScreenState extends State<VentaFormScreen> {
     final sucursalVM = Provider.of<SucursalViewModel>(context);
     final productoVM = Provider.of<ProductoViewModel>(context);
 
-    return Scaffold(      
+    return Scaffold(
       appBar: ScreenAppbar(title: 'Registrar Venta'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

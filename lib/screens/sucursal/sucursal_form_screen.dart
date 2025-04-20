@@ -48,7 +48,7 @@ class _SucursalFormScreenState extends State<SucursalFormScreen> {
         isActive: widget.sucursal?.isActive ?? true,
       );
 
-      await Provider.of<SucursalViewModel>(context, listen: false).guardar(sucursal);;
+      await Provider.of<SucursalViewModel>(context, listen: false).guardar(sucursal);
       
       if (mounted) {
         setState(() {

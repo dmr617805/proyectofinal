@@ -104,7 +104,7 @@ class _ProductoFormScreenState extends State<ProductoFormScreen> {
         inventario: inventarioList,
       );
 
-      await Provider.of<ProductoViewModel>(context, listen: false).guardar(producto);;      
+      await Provider.of<ProductoViewModel>(context, listen: false).guardar(producto);    
 
       if (mounted) {
         setState(() {

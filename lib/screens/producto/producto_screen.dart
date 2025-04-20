@@ -26,9 +26,41 @@ class _ProductoScreenState extends State<ProductoScreen> {
   }
 
   Future<void> _loadData() async {
-
     viewModel = Provider.of<ProductoViewModel>(context, listen: false);
     await viewModel.cargarProductosConInventario();
+  }
+
+
+  
+   void _eliminar(BuildContext context, int idProducto, String nombreProducto, ProductoViewModel vm) async {
+    final confirmacion = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('¿Eliminar producto?'),
+        content: Text('¿Estás seguro que deseas eliminar el producto $nombreProducto ?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancelar'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true),                        
+            child: const Text('Eliminar', style: TextStyle(fontWeight: FontWeight.w800),),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmacion == true) {
+      vm.eliminar(idProducto);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Producto eliminado correctamente.', style: TextStyle(color: Colors.black ),),
+          backgroundColor: Color.fromARGB(255, 117, 177, 119),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
   }
 
 
@@ -38,8 +70,8 @@ class _ProductoScreenState extends State<ProductoScreen> {
       appBar: ScreenAppbar(title: 'Productos'),
       body: Consumer<ProductoViewModel>(
         builder: (context, viewModel, child) {
-          if (viewModel.productos.isEmpty) {
-            return const Center(child: Text('No hay productos'));
+          if (viewModel.productos.isEmpty) {            
+            return const Center(child: Text('No hay productos registrados.', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),));
           }
           return ListView.builder(
             itemCount: viewModel.productos.length,
@@ -53,8 +85,8 @@ class _ProductoScreenState extends State<ProductoScreen> {
                     arguments: producto,
                   );
                 },
-                onDelete: () {
-                  viewModel.eliminar(producto.idProducto!);
+                onDelete: () {                  
+                  _eliminar(context, producto.idProducto!, producto.nombre, viewModel);
                 },
               );
             },

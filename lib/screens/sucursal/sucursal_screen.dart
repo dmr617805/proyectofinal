@@ -29,6 +29,37 @@ class _SucursalScreenState extends State<SucursalScreen> {
     await viewModel.cargarSucursales();
   }
 
+ void _eliminar(BuildContext context, int idSucursal, String nombreSucursal, SucursalViewModel vm) async {
+    final confirmacion = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('¿Eliminar sucursal?'),
+        content: Text('¿Estás seguro que deseas eliminar la sucursal $nombreSucursal ?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancelar'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true),                        
+            child: const Text('Eliminar', style: TextStyle(fontWeight: FontWeight.w800),),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmacion == true) {
+      vm.eliminar(idSucursal);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Sucursal eliminada correctamente.', style: TextStyle(color: Colors.black ),),
+          backgroundColor: Color.fromARGB(255, 117, 177, 119),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(      
@@ -36,7 +67,7 @@ class _SucursalScreenState extends State<SucursalScreen> {
       body: Consumer<SucursalViewModel>(
         builder: (context, vm, child) {
           if (vm.sucursales.isEmpty) {
-            return const Center(child: Text('No hay sucursales registradas.'));
+            return const Center(child: Text('No hay sucursales registradas.', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),));
           }
 
           return ListView.builder(
@@ -52,7 +83,7 @@ class _SucursalScreenState extends State<SucursalScreen> {
                   );
                 },
                 onEliminar: () {
-                  vm.eliminar(sucursal.idSucursal!);
+                   _eliminar(context, sucursal.idSucursal!, sucursal.nombre, vm);
                 },
               );
             },

@@ -59,33 +59,4 @@ class UsuarioRepository {
     return null;
   }
 
-  // Obtener un usuario por correo
-  Future<Usuario?> obtenerPorCorreo(String correo) async {
-    final List<Map<String, dynamic>> maps = await _databaseHelper.query(
-      'usuario',
-      whereClause: 'correo = ?',
-      whereArgs: [correo],
-    );
-
-    if (maps.isNotEmpty) {
-      return Usuario.fromMap(maps.first);
-    }
-
-    return null;
-  }
-
-  // Obtener un usuario por ID
-  Future<Usuario?> obtenerPorId(int idUsuario) async {
-    final List<Map<String, dynamic>> maps = await _databaseHelper.query(
-      'usuario',
-      whereClause: 'id_usuario = ?',
-      whereArgs: [idUsuario],
-    );
-
-    if (maps.isNotEmpty) {
-      return Usuario.fromMap(maps.first);
-    }
-
-    return null;
-  }
 }

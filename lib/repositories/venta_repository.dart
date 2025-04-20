@@ -29,21 +29,24 @@ class VentaRepository {
         final productoId = detalle.idProducto;
         final cantidadVendida = detalle.cantidad;
 
-        await txn.rawUpdate('''
+        await txn.rawUpdate(
+          '''
           UPDATE inventario
           SET cantidad_disponible = cantidad_disponible - ?
           WHERE id_producto = ? AND id_sucursal = ?
-        ''', [cantidadVendida, productoId, venta.idSucursal]);
+        ''',
+          [cantidadVendida, productoId, venta.idSucursal],
+        );
       }
     });
 
     return ventaId;
   }
 
-Future<List<Venta>> obtener({int? idUsuario}) async {
-  final db = await _databaseHelper.database;
+  Future<List<Venta>> obtener({int? idUsuario}) async {
+    final db = await _databaseHelper.database;
 
-  final String baseQuery = '''
+    final String baseQuery = '''
     SELECT 
       v.id_venta,
       v.fecha,
@@ -76,101 +79,66 @@ Future<List<Venta>> obtener({int? idUsuario}) async {
     INNER JOIN metodo_pago mp ON v.id_metodo_pago = mp.id_metodo_pago
   ''';
 
-  // Agregar condición si hay idUsuario
-  final String whereClause = idUsuario != null ? 'WHERE v.id_usuario = ?' : '';
-  final String orderBy = 'ORDER BY v.fecha DESC';
+    // Agregar condición si hay idUsuario esto se usa cuando el usuario
+    // es vendedor que solo vea sus ventas
+    // es casp de ser admin el puede ver todas las ventas
+    final String whereClause =
+        idUsuario != null ? 'WHERE v.id_usuario = ?' : '';
+    final String orderBy = 'ORDER BY v.fecha DESC';
 
-  final String finalQuery = '$baseQuery $whereClause $orderBy';
+    final String finalQuery = '$baseQuery $whereClause $orderBy';
 
-  final List<Map<String, dynamic>> rows = idUsuario != null
-      ? await db.rawQuery(finalQuery, [idUsuario])
-      : await db.rawQuery(finalQuery);
+    final List<Map<String, dynamic>> rows =
+        idUsuario != null
+            ? await db.rawQuery(finalQuery, [idUsuario])
+            : await db.rawQuery(finalQuery);
 
-  if (rows.isEmpty) return [];
-  
-  return rows.map((row) {
-    final cliente = Cliente(
-      idCliente: row['id_cliente'],
-      nombre: row['cliente_nombre'],
-      correo: row['cliente_correo'],
-      telefono: row['cliente_telefono'],
-      direccion: row['cliente_direccion'],
-    );
+    if (rows.isEmpty) return [];
 
-    final sucursal = Sucursal(
-      idSucursal: row['id_sucursal'],
-      nombre: row['sucursal_nombre'],
-      ubicacion: row['sucursal_ubicacion'],
-    );
+    return rows.map((row) {
+      final cliente = Cliente(
+        idCliente: row['id_cliente'],
+        nombre: row['cliente_nombre'],
+        correo: row['cliente_correo'],
+        telefono: row['cliente_telefono'],
+        direccion: row['cliente_direccion'],
+      );
 
-    final usuario = Usuario(
-      idUsuario: row['id_usuario'],
-      nombre: row['usuario_nombre'],
-      apellidoPaterno: row['usuario_apellido_paterno'],
-      correo: row['usuario_correo'],
-      rol: row['usuario_rol'],
-      password: '', 
-    );
+      final sucursal = Sucursal(
+        idSucursal: row['id_sucursal'],
+        nombre: row['sucursal_nombre'],
+        ubicacion: row['sucursal_ubicacion'],
+      );
 
-    final metodoPago = MetodoPago(
-      idMetodoPago: row['id_metodo_pago'],
-      codigo: row['metodo_pago_codigo'],
-      descripcion: row['metodo_pago_descripcion'],
-    );
+      final usuario = Usuario(
+        idUsuario: row['id_usuario'],
+        nombre: row['usuario_nombre'],
+        apellidoPaterno: row['usuario_apellido_paterno'],
+        correo: row['usuario_correo'],
+        rol: row['usuario_rol'],
+        password: '',
+      );
 
-    return Venta(
-      idVenta: row['id_venta'],
-      fecha: DateTime.parse(row['fecha']),
-      total: row['total'],
-      idSucursal: row['id_sucursal'],
-      idCliente: row['id_cliente'],
-      idMetodoPago: row['id_metodo_pago'],
-      idUsuario: row['id_usuario'],
-      cliente: cliente,
-      sucursal: sucursal,
-      usuario: usuario,
-      metodoPago: metodoPago,
-    );
-  }).toList();
-}
+      final metodoPago = MetodoPago(
+        idMetodoPago: row['id_metodo_pago'],
+        codigo: row['metodo_pago_codigo'],
+        descripcion: row['metodo_pago_descripcion'],
+      );
 
-
-
-  // Obtener todas las ventas
-  Future<List<Venta>> obtenerTodas() async {
-    final List<Map<String, dynamic>> maps = await _databaseHelper.query('venta');
-
-    return maps.map((map) => Venta.fromMap(map)).toList();
-  }
-
-  // Obtener detalles de una venta
-  Future<List<DetalleVenta>> obtenerDetallesPorVenta(int idVenta) async {
-    final maps = await _databaseHelper.query(
-      'detalle_venta',
-      whereClause: 'id_venta = ?',
-      whereArgs: [idVenta],
-    );
-
-    return maps.map((map) => DetalleVenta.fromMap(map)).toList();
-  }
-
-  // Obtener una venta con detalles
-  Future<Map<String, dynamic>> obtenerVentaCompleta(int idVenta) async {
-    final ventaMap = await _databaseHelper.query(
-      'venta',
-      whereClause: 'id_venta = ?',
-      whereArgs: [idVenta],
-    );
-
-    if (ventaMap.isEmpty) return {};
-
-    final venta = Venta.fromMap(ventaMap.first);
-    final detalles = await obtenerDetallesPorVenta(idVenta);
-
-    return {
-      'venta': venta,
-      'detalles': detalles,
-    };
+      return Venta(
+        idVenta: row['id_venta'],
+        fecha: DateTime.parse(row['fecha']),
+        total: row['total'],
+        idSucursal: row['id_sucursal'],
+        idCliente: row['id_cliente'],
+        idMetodoPago: row['id_metodo_pago'],
+        idUsuario: row['id_usuario'],
+        cliente: cliente,
+        sucursal: sucursal,
+        usuario: usuario,
+        metodoPago: metodoPago,
+      );
+    }).toList();
   }
 
   // Eliminar lógicamente una venta (si aplicara is_active en tabla venta)

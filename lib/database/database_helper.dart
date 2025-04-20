@@ -134,6 +134,19 @@ class DatabaseHelper {
     )
   ''');
 
+
+  await db.execute('''
+    CREATE TABLE transaccion (
+      id_transaccion INTEGER PRIMARY KEY AUTOINCREMENT,
+      referencia TEXT NOT NULL,
+      fecha TEXT NOT NULL,      
+      estatus TEXT NOT NULL,
+      id_venta INTEGER NOT NULL,
+      FOREIGN KEY (id_venta) REFERENCES venta(id_venta)
+    )
+  ''');
+
+
     final batch = db.batch();
 
 

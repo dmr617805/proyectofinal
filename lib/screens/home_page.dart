@@ -52,14 +52,7 @@ class HomePage extends StatelessWidget {
               Navigator.pushNamed(context, UsuarioScreen.routeName);
             },
           ),
-          ListTile(
-            title: Text('Productos'),
-            leading: Icon(Icons.shopping_cart),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, ProductoScreen.routeName);
-            },
-          ),
+
           ListTile(
             title: Text('Sucursales'),
             leading: Icon(Icons.store),
@@ -74,6 +67,14 @@ class HomePage extends StatelessWidget {
             onTap: () {
               Navigator.pop(context);
               Navigator.pushNamed(context, ClienteScreen.routeName);
+            },
+          ),
+          ListTile(
+            title: Text('Productos'),
+            leading: Icon(Icons.shopping_bag),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, ProductoScreen.routeName);
             },
           ),
           ListTile(

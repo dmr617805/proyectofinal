@@ -28,6 +28,38 @@ class _ClienteScreenState extends State<ClienteScreen> {
     await viewModel.cargarClientes();
   }
 
+
+   void _eliminar(BuildContext context, int idCliente, String nombreCliente, ClienteViewModel vm) async {
+    final confirmacion = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('¿Eliminar cliente?'),
+        content: Text('¿Estás seguro que deseas eliminar el cliente $nombreCliente ?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancelar'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true),                        
+            child: const Text('Eliminar', style: TextStyle(fontWeight: FontWeight.w800),),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmacion == true) {
+      vm.eliminar(idCliente);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Cliente eliminado correctamente.', style: TextStyle(color: Colors.black ),),
+          backgroundColor: Color.fromARGB(255, 117, 177, 119),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,8 +69,8 @@ class _ClienteScreenState extends State<ClienteScreen> {
       body: Consumer<ClienteViewModel>(
         builder: (context, viewModel, child) {
           // Verificamos el estado de la conexión con la base de datos.
-          if (viewModel.clientes.isEmpty) {
-            return Center(child: Text('No hay clientes'));
+          if (viewModel.clientes.isEmpty) {            
+            return const Center(child: Text('No hay clientes registrados.', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),));
           }
 
           return ListView.builder(
@@ -52,8 +84,8 @@ class _ClienteScreenState extends State<ClienteScreen> {
                     context,
                   ).pushNamed(ClienteFormScreen.routeName, arguments: cliente);
                 },
-                onDelete: () {
-                  viewModel.eliminar(cliente.idCliente!);
+                onDelete: () {                  
+                   _eliminar(context, cliente.idCliente!, cliente.nombre, viewModel);
                 },
               );
             },
