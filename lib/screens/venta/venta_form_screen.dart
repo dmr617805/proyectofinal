@@ -112,12 +112,16 @@ class _VentaFormScreenState extends State<VentaFormScreen> {
       if (!mounted) return;
 
       _mostrarSnackBar('Pago registrado exitosamente', 'exitoso');
-
       await Future.delayed(const Duration(seconds: 2));
-      Navigator.pop(context);
 
+      if (mounted){
+        Navigator.pop(context);
+      }
+     
     } catch (e) {
-      _mostrarSnackBar('Ocurrió un error: ${e.toString()}', 'error');
+         if (mounted) {
+          _mostrarSnackBar('Ocurrió un error: ${e.toString()}', 'error');
+         }
     } finally {
       if (mounted) {
         setState(() => _guardandoVenta = false);
@@ -211,83 +215,86 @@ class _VentaFormScreenState extends State<VentaFormScreen> {
 
     return Scaffold(
       appBar: ScreenAppbar(title: 'Registrar Venta'),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            DropdownButtonFormField<Cliente>(
-              decoration: const InputDecoration(labelText: 'Cliente'),
-              value: clienteSeleccionado,
-              items:
-                  clienteVM.clientes
-                      .map(
-                        (cliente) => DropdownMenuItem(
-                          value: cliente,
-                          child: Text(cliente.nombre),
-                        ),
-                      )
-                      .toList(),
-              onChanged:
-                  (cliente) => setState(() => clienteSeleccionado = cliente),
-            ),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<Sucursal>(
-              decoration: const InputDecoration(labelText: 'Sucursal'),
-              value: sucursalSeleccionada,
-              items:
-                  sucursalVM.sucursales
-                      .map(
-                        (sucursal) => DropdownMenuItem(
-                          value: sucursal,
-                          child: Text(sucursal.nombre),
-                        ),
-                      )
-                      .toList(),
-              onChanged:
-                  (sucursal) => setState(() => sucursalSeleccionada = sucursal),
-            ),
-            const SizedBox(height: 8),
+      body: Form(
+        canPop: !_guardandoVenta,             
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              DropdownButtonFormField<Cliente>(
+                decoration: const InputDecoration(labelText: 'Cliente'),
+                value: clienteSeleccionado,
+                items:
+                    clienteVM.clientes
+                        .map(
+                          (cliente) => DropdownMenuItem(
+                            value: cliente,
+                            child: Text(cliente.nombre),
+                          ),
+                        )
+                        .toList(),
+                onChanged:
+                    (cliente) => setState(() => clienteSeleccionado = cliente),
+              ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<Sucursal>(
+                decoration: const InputDecoration(labelText: 'Sucursal'),
+                value: sucursalSeleccionada,
+                items:
+                    sucursalVM.sucursales
+                        .map(
+                          (sucursal) => DropdownMenuItem(
+                            value: sucursal,
+                            child: Text(sucursal.nombre),
+                          ),
+                        )
+                        .toList(),
+                onChanged:
+                    (sucursal) => setState(() => sucursalSeleccionada = sucursal),
+              ),
+              const SizedBox(height: 8),
 
-            /// Agregar producto
-            AgregarProductoWidget(
-              productos: productoVM.productos,
-              onAgregar: _agregarProducto,
-            ),
+              /// Agregar producto
+              AgregarProductoWidget(
+                productos: productoVM.productos,
+                onAgregar: _agregarProducto,
+              ),
 
-            const Divider(),
+              const Divider(),
 
-            ListaDetalleProductosWidget(
-              detalles: detalles,
-              onEliminar: _eliminarProducto,
-            ),
+              ListaDetalleProductosWidget(
+                detalles: detalles,
+                onEliminar: _eliminarProducto,
+              ),
 
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-            /// Metodo de pago
-            MetodoPagoSelector(
-              metodoPagoSeleccionado: metodoPagoSeleccionado,
-              onMetodoSeleccionado: (metodo) {
-                setState(() {
-                  metodoPagoSeleccionado = metodo;
-                });
-              },
-            ),
-            const SizedBox(height: 16),
-            TotalesWidget(
-              totalProductos: _calcularCantidadTotal(),
-              totalPagar: _calcularTotal(),
-            ),
-            const SizedBox(height: 16),
-            BotonGuardar(
-              isLoading: _guardandoVenta,
-              texto: 'Crear Venta',
-              onPressed: _guardarVenta,
-            ),
-            const SizedBox(height: 16),
-          ],
+              /// Metodo de pago
+              MetodoPagoSelector(
+                metodoPagoSeleccionado: metodoPagoSeleccionado,
+                onMetodoSeleccionado: (metodo) {
+                  setState(() {
+                    metodoPagoSeleccionado = metodo;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              TotalesWidget(
+                totalProductos: _calcularCantidadTotal(),
+                totalPagar: _calcularTotal(),
+              ),
+              const SizedBox(height: 16),
+              BotonGuardar(
+                isLoading: _guardandoVenta,
+                texto: 'Crear Venta',
+                onPressed: _guardarVenta,
+              ),
+              const SizedBox(height: 16),
+            ],
+          ),
         ),
-      ),
+    ),
     );
   }
 }
