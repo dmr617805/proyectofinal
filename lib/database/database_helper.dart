@@ -151,8 +151,8 @@ class DatabaseHelper {
 
 
     // Insertar usuarios predeterminados
-    batch.insert('usuario', { 'nombre': 'Javier', 'apellido_paterno': 'Fuentes', 'apellido_materno': 'Lopez', 'correo': 'admin@gmail.com', 'password': '1234', 'rol': 'administrador', 'is_active': 1 });
-    batch.insert('usuario', { 'nombre': 'Alan', 'apellido_paterno': 'Mata', 'apellido_materno': 'Alfaro', 'correo': 'vendedor@gmail.com', 'password': '1234', 'rol': 'vendedor', 'is_active': 1 });
+    batch.insert('usuario', { 'nombre': 'Javier', 'apellido_paterno': 'Fuentes', 'apellido_materno': 'Lopez', 'correo': 'admin@mail.com', 'password': '1234', 'rol': 'administrador', 'is_active': 1 });
+    batch.insert('usuario', { 'nombre': 'Alan', 'apellido_paterno': 'Mata', 'apellido_materno': 'Alfaro', 'correo': 'vendedor@mail.com', 'password': '1234', 'rol': 'vendedor', 'is_active': 1 });
 
     // Insertar metodos de pago predeterminados
     batch.insert('metodo_pago', {'codigo': 'efectivo', 'descripcion':'Efectivo' , 'is_active': 1});

@@ -92,16 +92,20 @@ class _VentaFormScreenState extends State<VentaFormScreen> {
   }
 
   void _guardarVenta() async {
+    // se valida que todos los campos esten llenos antes de avanzar con el proceso de guardado
     if (!_validarFormulario()) return;
 
     try {
       setState(() => _guardandoVenta = true);
 
+      // se obtiene el inventario de los productos para verificar que haya stock suficiente
       final inventario = await Provider.of<ProductoViewModel>(context,listen: false,).obtenerReporteInventario();
       if (!_verificarStock(inventario)) return;
 
       final venta = _construirVenta();
 
+      // se gurda la venta y los detalles de la misma, adicionalmente se actualiza el stock de los productos vendidos
+      // ademas se crea una transaccion para simular el pago
       final ventaViewModel = Provider.of<VentaViewModel>(context,listen: false,);
       await ventaViewModel.registrarVenta(venta, detalles);
 

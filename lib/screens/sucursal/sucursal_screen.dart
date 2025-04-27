@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:proyectofinal/screens/sucursal/sucursal_form_screen.dart';
 import 'package:proyectofinal/viewmodels/sucursal_viewmodel.dart';
 import 'package:proyectofinal/widgets/comun/screen_appbar.dart';
-import 'package:proyectofinal/widgets/sucursal_card.dart';
+import 'package:proyectofinal/widgets/sucursal/sucursal_card.dart';
 
 class SucursalScreen extends StatefulWidget {
   static const String routeName = '/sucursales';

@@ -34,7 +34,8 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Drawer _buildAdminDrawer(BuildContext context, String nombre, String correo) {
+  // Se encarga de construir el drawer para el admin con las opciones que son unicas para su rol
+  Drawer _obtenerAdminDrawer(BuildContext context, String nombre, String correo) {
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -112,7 +113,8 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Drawer _buildUserDrawer(BuildContext context, String nombre, String correo) {
+ // Se encarga de obtener el drawer para el usuario vendedor con las opciones que son unicas para su rol
+  Drawer _obtenerVendedorDrawer(BuildContext context, String nombre, String correo) {
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -168,8 +170,8 @@ class HomePage extends StatelessWidget {
       ),
       drawer:
           usuario?.esAdmin == true
-              ? _buildAdminDrawer(context, nombre, correo)
-              : _buildUserDrawer(context, nombre, correo),
+              ? _obtenerAdminDrawer(context, nombre, correo)
+              : _obtenerVendedorDrawer(context, nombre, correo),
       body: VentaScreen(),
     );
   }

@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:proyectofinal/screens/producto/producto_form_screen.dart';
 import 'package:proyectofinal/viewmodels/producto_viewmodel.dart';
 import 'package:proyectofinal/widgets/comun/screen_appbar.dart';
-import 'package:proyectofinal/widgets/producto_card.dart';
+import 'package:proyectofinal/widgets/producto/producto_card.dart';
 
 class ProductoScreen extends StatefulWidget {
   static const String routeName = '/productos';

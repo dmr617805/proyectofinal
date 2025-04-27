@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyectofinal/screens/cliente/cliente_form_screen.dart';
 import 'package:proyectofinal/viewmodels/cliente_viewmodel.dart';
-import 'package:proyectofinal/widgets/cliente_card.dart';
+import 'package:proyectofinal/widgets/cliente/cliente_card.dart';
 import 'package:proyectofinal/widgets/comun/screen_appbar.dart';
 
 class ClienteScreen extends StatefulWidget {
